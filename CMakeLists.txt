@@ -7,7 +7,7 @@ project(engine_project)
 ###############################################################################
 
 # these instructions search the directory tree when cmake is
-# invoked and put all files that match the pattern in the variables 
+# invoked and put all files that match the pattern in the variables
 # `sources` and `data`
 file(GLOB_RECURSE sources      src/main/*.cpp src/main/*.h)
 file(GLOB_RECURSE sources_test src/test/*.cpp)
@@ -45,6 +45,11 @@ target_include_directories(engine PUBLIC thirdparty/include/GLFW)
 target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/bin/GLFW/Debug/glfw3.lib)
 target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/bin/GLFW/Release/glfw3.lib)
 
+#MATHEMATICS
+target_include_directories(engine PUBLIC thirdparty/include/MATHEMATICS)
+
+target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/bin/MATHEMATICS/Debug/mathematics.lib)
+target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/bin/MATHEMATICS/Release/mathematics.lib)
 
 
 # this defines the variables Boost_LIBRARIES that contain all library names

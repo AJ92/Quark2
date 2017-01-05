@@ -1,4 +1,6 @@
 #include <glfw3.h>
+#include <mathematics.h>
+
 
 int main(void)
 {
@@ -15,6 +17,12 @@ int main(void)
         glfwTerminate();
         return -1;
     }
+
+
+	Helper h;
+
+	//Vector3 res = vec1 + vec2;
+
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
