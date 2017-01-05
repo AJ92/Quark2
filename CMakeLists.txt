@@ -51,6 +51,8 @@ target_include_directories(engine PUBLIC thirdparty/include/MATHEMATICS)
 target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/bin/MATHEMATICS/Debug/mathematics.lib)
 target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/bin/MATHEMATICS/Release/mathematics.lib)
 
+add_definitions(-DMATHEMATICS_LIBRARY_STATIC)
+
 
 # this defines the variables Boost_LIBRARIES that contain all library names
 # that we need to link to

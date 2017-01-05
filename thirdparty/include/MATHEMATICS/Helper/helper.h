@@ -5,14 +5,13 @@
 
 #define fuzzyThreshold   0.000001
 
-class MATHEMATICSSHARED_EXPORT Helper
+class Helper
 {
 public:
-	Helper();
+	MATHEMATICSSHARED_EXPORT Helper();
 
-	static bool fuzzyIsNull(double value);
-	static bool fuzzyIsNull(float value);
-
+	MATHEMATICSSHARED_EXPORT static bool fuzzyIsNull(double value);
+	MATHEMATICSSHARED_EXPORT static bool fuzzyIsNull(float value);
 };
 
 #endif // HELPER_H
