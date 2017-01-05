@@ -1,9 +1,17 @@
 #include <glfw3.h>
-#include <mathematics.h>
+#include "engine.h"
+
+
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+#	include <Windows.h>
+#endif
 
 
 int main(void)
 {
+	Engine e;
+
+
     GLFWwindow* window;
 
     /* Initialize the library */
@@ -17,12 +25,6 @@ int main(void)
         glfwTerminate();
         return -1;
     }
-
-
-	Helper h;
-
-	//Vector3 res = vec1 + vec2;
-
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
