@@ -30,6 +30,8 @@ int main(void)
     glfwMakeContextCurrent(window);
 
 	glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+	glfwSwapInterval(1);
+
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))

@@ -45,6 +45,22 @@ target_include_directories(engine PUBLIC thirdparty/include/GLFW)
 target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/bin/GLFW/Debug/glfw3.lib)
 target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/bin/GLFW/Release/glfw3.lib)
 
+
+#LIBAUDIODECODER
+target_include_directories(engine PUBLIC thirdparty/include/LIBAUDIODECODER)
+
+target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/bin/LIBAUDIODECODER/Debug/audiodecoder.dll)
+target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/bin/LIBAUDIODECODER/Release/audiodecoder.dll)
+
+
+
+#PORTAUDIO
+target_include_directories(engine PUBLIC thirdparty/include/PORTAUDIO)
+
+target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/bin/PORTAUDIO/Debug/portaudio_static_x64.lib)
+target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/bin/PORTAUDIO/Release/portaudio_static_x64.lib)
+
+
 #MATHEMATICS
 target_include_directories(engine PUBLIC thirdparty/include/MATHEMATICS)
 
