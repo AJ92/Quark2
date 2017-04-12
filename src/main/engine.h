@@ -4,6 +4,7 @@
 #include <memory>
 #include <audio.h>
 
+
 class Engine
 {
 public:
@@ -12,6 +13,8 @@ public:
 
 	bool isDebug();
 	bool isReady();
+
+	std::shared_ptr<Audio> getAudio();
 
 private:
 	bool debug;
@@ -29,8 +32,7 @@ private:
 	bool deinit_audio();
 	bool post_deinit();
 
-	std::shared_ptr<Audio> audio;
-
+    std::shared_ptr<Audio> audio;
 };
 
 #endif // ENGINE_H

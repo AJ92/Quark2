@@ -2,6 +2,9 @@
 #include <iostream>
 
 
+
+
+
 Engine::Engine() {
 	bool pre_init_done = pre_init();
 
@@ -54,6 +57,18 @@ bool Engine::isReady() {
 	return ready;
 }
 
+
+std::shared_ptr<Audio> Engine::getAudio() {
+	return audio;
+}
+
+
+
+
+///////////////////////////////////////////////
+//
+//		PRIVATE
+
 bool Engine::pre_init() {
 #ifndef _DEBUG
 #	if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
@@ -79,6 +94,12 @@ bool Engine::init_audio() {
 	return true;
 }
 bool Engine::post_init() {
+
+	//std::string filename = "C:/Code/VS/engine-main/engine/build/Debug/test.flac";
+	//audio->processEvent(AudioEventType::start, &audio->getSound(filename), true);
+	std::string filename2 = "C:/Code/VS/engine-main/engine/build/Debug/test3.flac";
+	audio->processEvent(AudioEventType::start, &audio->getSound(filename2), true);
+
 	return true;
 }
 
@@ -97,4 +118,3 @@ bool Engine::deinit_audio() {
 bool Engine::post_deinit() {
 	return true;
 }
-

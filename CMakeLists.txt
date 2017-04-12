@@ -40,74 +40,37 @@ file(COPY ${data} DESTINATION resources)
 target_link_libraries(engine PUBLIC opengl32)
 
 #GLFW
-target_include_directories(engine PUBLIC thirdparty/include/GLFW)
+target_include_directories(engine PUBLIC thirdparty/glfw/include)
 
-target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/bin/GLFW/Debug/glfw3.lib)
-target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/bin/GLFW/Release/glfw3.lib)
+target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glfw/bin/Debug/glfw3.lib)
+target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glfw/bin/Release/glfw3.lib)
 
-
-#LIBAUDIODECODER
-target_include_directories(engine PUBLIC thirdparty/include/LIBAUDIODECODER)
-
-target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/bin/LIBAUDIODECODER/Debug/audiodecoder.dll)
-target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/bin/LIBAUDIODECODER/Release/audiodecoder.dll)
 
 
 
 #PORTAUDIO
-target_include_directories(engine PUBLIC thirdparty/include/PORTAUDIO)
+target_include_directories(engine PUBLIC thirdparty/portaudio/include)
 
-target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/bin/PORTAUDIO/Debug/portaudio_static_x64.lib)
-target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/bin/PORTAUDIO/Release/portaudio_static_x64.lib)
+target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/portaudio/bin/Debug/portaudio_static_x64.lib)
+target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/portaudio/bin/Release/portaudio_static_x64.lib)
+
+
+#LIBSNDFILE
+target_include_directories(engine PUBLIC thirdparty/libsndfile/include)
+
+target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/libsndfile/bin/Release/libsndfile-1.lib)
+target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/libsndfile/bin/Release/libsndfile-1.lib)
+
 
 
 #MATHEMATICS
-target_include_directories(engine PUBLIC thirdparty/include/MATHEMATICS)
+target_include_directories(engine PUBLIC thirdparty/mathematics/include)
 
-target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/bin/MATHEMATICS/Debug/mathematics.lib)
-target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/bin/MATHEMATICS/Release/mathematics.lib)
+target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/mathematics/bin/Debug/mathematics.lib)
+target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/mathematics/bin/Release/mathematics.lib)
 
 add_definitions(-DMATHEMATICS_LIBRARY_STATIC)
 
-
-# this defines the variables Boost_LIBRARIES that contain all library names
-# that we need to link to
-# find_package(Boost 1.36.0 COMPONENTS filesystem system REQUIRED)
-
-# target_link_libraries(engine PUBLIC
-  # ${Boost_LIBRARIES}
-  # here you can add any library dependencies
-# )
-
-###############################################################################
-## testing ####################################################################
-###############################################################################
-
-# this is for our testing framework
-# we don't add REQUIRED because it's just for testing
-find_package(GTest)
-
-if(GTEST_FOUND)
-  add_executable(unit_tests ${sources_test} ${sources})
-
-  # we add this define to prevent collision with the main
-  # this might be better solved by not adding the source with the main to the
-  # testing target
-  target_compile_definitions(unit_tests PUBLIC UNIT_TESTS)
-
-  # this allows us to use our executable as a link library
-  # therefore we can inherit all compiler options and library dependencies
-  set_target_properties(engine PROPERTIES ENABLE_EXPORTS on)
-
-  target_link_libraries(unit_tests PUBLIC
-    ${GTEST_BOTH_LIBRARIES}
-    engine
-  )
-
-  target_include_directories(unit_tests PUBLIC
-    ${GTEST_INCLUDE_DIRS} # doesn't do anything on Linux
-  )
-endif()
 
 ###############################################################################
 ## packaging ##################################################################

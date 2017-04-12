@@ -1,64 +1,9 @@
 #include "audio.h"
 #include <iostream>
 
-
-// All audio will be handled as stereo.
-const int NUM_CHANNELS = 2;
-
-// Declaration for audio callback called by PortAudio.
-int audioCallback(const void *input, void *output,
-	unsigned long frameCount,
-	const PaStreamCallbackTimeInfo* timeInfo,
-	PaStreamCallbackFlags statusFlags,
-	void* userData);
-
-// This is the function that gets called when we need to generate sound! 
-// In this example, we're going to decode some audio using libaudiodecoder
-// and fill the "output" buffer with that. In other words, we're going to
-// decode demo.mp3 and send that audio to the soundcard. Easy!
-int audioCallback(const void *input, void *output,
-	unsigned long frameCount,
-	const PaStreamCallbackTimeInfo* timeInfo,
-	PaStreamCallbackFlags statusFlags,
-	void* userData)
+Audio::Audio(bool debug) :
+	data()
 {
-
-	AudioDecoder* pAudioDecoder = static_cast<AudioDecoder*>(userData);
-
-	// Play it safe when debugging and coding, protect your ears by clearing
-	// the output buffer.
-	memset(output, 0, frameCount * NUM_CHANNELS * sizeof(float));
-
-	// Decode the number of samples that PortAudio said it needs to send to the 
-	// soundcard. This is where we're grabbing audio from demo.mp3!
-	int samplesRead = pAudioDecoder->read(frameCount * NUM_CHANNELS,
-		static_cast<SAMPLE*>(output));
-
-	// IMPORTANT:
-	// Note that in a real application, you will probably want to call read()
-	// in a separate thread because it is NOT realtime safe. That means it does
-	// not run in constant time because it might be allocating memory, calling
-	// system functions, or doing other things that can take an 
-	// unpredictably long amount of time.
-	//
-	// The danger is that if read() takes too long, then audioCallback() might not
-	// finish quickly enough, and there will be a "dropout" or pop in the audio
-	// that comes out your speakers. 
-	//
-	// If you want to guard against dropouts, you should either decode the entire file into
-	// memory or decode it on-the-fly in a separate thread. To implement the latter, you would:
-	//   - Set up a secondary thread and read() a few seconds of audio into a ringbuffer
-	//   - When the callback runs, you want to fetch audio from that ringbuffer.
-	//   - Have the secondary thread keep read()ing and ensuring the ringbuffer is full.
-	//
-	// Ross Bencina has a great introduction to realtime programming and goes into
-	// more detail here:
-	// http://www.rossbencina.com/code/real-time-audio-programming-101-time-waits-for-nothing
-
-	return paContinue;
-}
-
-Audio::Audio(bool debug) {
 	bool pre_init_done = pre_init();
 	bool post_init_done = post_init();
 
@@ -86,6 +31,127 @@ Audio::~Audio() {
 	ready = false;
 }
 
+// This is the function that gets called when we need to generate sound! 
+int Audio::PortAudioCallback(const void *input, void *output,
+	unsigned long frameCount,
+	const PaStreamCallbackTimeInfo* timeInfo,
+	PaStreamCallbackFlags statusFlags,
+	void* userData)
+{
+	Audio * handler = (Audio *)userData;
+
+	unsigned long stereoFrameCount = frameCount * handler->CHANNEL_COUNT;
+	memset((int *)output, 0, stereoFrameCount * sizeof(int));
+
+
+	if (handler->data.size() > 0)
+	{
+		auto it = handler->data.begin();
+		while (it != handler->data.end())
+		{
+			Playback * data = (*it);
+			AudioFile * audioFile = data->audioFile;
+
+			int * outputBuffer = new int[stereoFrameCount];
+			int * bufferCursor = outputBuffer;
+
+			unsigned int framesLeft = (unsigned int)frameCount;
+			unsigned int framesRead;
+
+			bool playbackEnded = false;
+			while (framesLeft > 0)
+			{
+				sf_seek(audioFile->data, data->position, SEEK_SET);
+
+				if (framesLeft > (audioFile->info.frames - data->position))
+				{
+					framesRead = (unsigned int)(audioFile->info.frames - data->position);
+					if (data->loop)
+					{
+						data->position = 0;
+					}
+					else
+					{
+						playbackEnded = true;
+						framesLeft = framesRead;
+					}
+				}
+				else
+				{
+					framesRead = framesLeft;
+					data->position += framesRead;
+				}
+
+				sf_readf_int(audioFile->data, bufferCursor, framesRead);
+
+				bufferCursor += framesRead;
+
+				framesLeft -= framesRead;
+			}
+
+
+			int * outputCursor = (int *)output;
+			if (audioFile->info.channels == 1) {
+				for (unsigned long i = 0; i < stereoFrameCount; ++i)
+				{
+					*outputCursor += 0.8 * outputBuffer[i];
+					++outputCursor;
+					*outputCursor += 0.8 * outputBuffer[i];
+					++outputCursor;
+				}
+			}
+			else {
+				for (unsigned long i = 0; i < stereoFrameCount; ++i)
+				{
+					*outputCursor += 0.8 * outputBuffer[i];
+					++outputCursor;
+				}
+			}
+
+
+			if (playbackEnded) {
+				it = handler->data.erase(it);
+				delete data;
+			}
+			else
+			{
+				++it;
+			}
+
+
+			delete outputBuffer;
+		}
+	}
+	return paContinue;
+}
+
+void Audio::processEvent(AudioEventType audioEventType, AudioFile * audioFile, bool loop)
+{
+	switch (audioEventType) {
+	case start:
+		if (Pa_IsStreamStopped(stream))
+		{
+			Pa_StartStream(stream);
+		}
+
+		data.push_back(new Playback{
+			audioFile,
+			0,
+			loop
+		});
+
+		break;
+	case stop:
+		Pa_StopStream(stream);
+		for (auto instance : data)
+		{
+			delete instance;
+		}
+		data.clear();
+		break;
+	}
+}
+
 bool Audio::isDebug() {
 	return debug;
 }
@@ -95,15 +161,70 @@ bool Audio::isReady() {
 }
 
 bool Audio::pre_init() {
-	PaError err = Pa_Initialize();
-	if (err != paNoError) {
-		std::cout << "error: " << Pa_GetErrorText(err) << std::endl;
+	PaError errorCode;
+	errorCode = Pa_Initialize();
+	if (errorCode != paNoError)
+	{
+		std::cout << "pre_init error: " << Pa_GetErrorText(errorCode) << std::endl;
+		ready = false;
+		return false;
+	}
+
+	PaStreamParameters outputParameters;
+
+	outputParameters.device = Pa_GetDefaultOutputDevice();
+	outputParameters.channelCount = CHANNEL_COUNT;
+	outputParameters.sampleFormat = paInt32;
+	outputParameters.suggestedLatency = 0.125;
+	outputParameters.hostApiSpecificStreamInfo = 0;
+
+	errorCode = Pa_OpenStream(&stream,
+		NO_INPUT,
+		&outputParameters,
+		SAMPLE_RATE,
+		paFramesPerBufferUnspecified,
+		paNoFlag,
+		&PortAudioCallback,
+		this);
+
+	if (errorCode != paNoError)
+	{
+		Pa_Terminate();
+
+		std::cout << "pre_init error: " << Pa_GetErrorText(errorCode) << std::endl;
+		ready = false;
 		return false;
 	}
 	return true;
 }
+
+AudioFile & Audio::getSound(std::string filename) {
+	//check if we already have such a file
+	{
+		auto search = sounds.find(filename);
+		if (search != sounds.end()) {
+			return search->second;
+		}
+	}
+
+	SF_INFO info;
+	info.format = 0;
+	SNDFILE * audioFile = sf_open(filename.c_str(), SFM_READ, &info);
+
+	AudioFile sound{
+		audioFile,
+		info
+	};
+
+	if (!audioFile)
+	{
+		std::cout << "Unable to open audio file: " << filename << std::endl;
+	}
+	sounds[filename] = sound;
+	return sounds[filename];
+}
+
 bool Audio::post_init() {
-	test();
 	return true;
 }
 
@@ -111,88 +232,26 @@ bool Audio::pre_deinit() {
 	return true;
 }
 bool Audio::post_deinit() {
-	PaError err = Pa_Terminate();
+	PaError err = Pa_CloseStream(stream);
 	if (err != paNoError) {
-		std::cout << "deinit_sound error: " << Pa_GetErrorText(err) << std::endl;
+		std::cout << "post_deinit error: " << Pa_GetErrorText(err) << std::endl;
 		return false;
+	}
+	//clean up playbacks
+	for (auto wrapper : data)
+	{
+		delete wrapper;
+	}
+	err = Pa_Terminate();
+	if (err != paNoError) {
+		std::cout << "post_deinit error: " << Pa_GetErrorText(err) << std::endl;
+		return false;
+	}
+	//clean up audiofiles
+	for (auto entry : sounds)
+	{
+		sf_close(entry.second.data);
 	}
 	return true;
 }
 
-/**
-* gen saw tooth wave...
-*/
-bool Audio::test() {
-	// Initialize an AudioDecoder object and open demo.mp3
-	std::string filename = "demo.mp3";
-	AudioDecoder* pAudioDecoder = new AudioDecoder(filename);
-
-	if (pAudioDecoder->open() != AUDIODECODER_OK)
-	{
-		std::cerr << "Failed to open " << filename << std::endl;
-		return 1;
-	}
-
-	// Initialize the PortAudio library.
-	if (Pa_Initialize() != paNoError) {
-		std::cerr << "Failed to initialize PortAudio." << std::endl;
-		return 1;
-	};
-
-	PaStream* pStream = NULL;
-
-	// Open the PortAudio stream (opens the soundcard device).
-	if (Pa_OpenDefaultStream(&pStream,
-		0, // No input channels
-		2, // 2 output channel
-		paFloat32, // Sample format (see PaSampleFormat)           
-		44100, // Sample Rate
-		paFramesPerBufferUnspecified,  // Frames per buffer 
-		&audioCallback,
-		static_cast<void*>(pAudioDecoder)) != paNoError)
-	{
-		std::cerr << "Failed to open the default PortAudio stream." << std::endl;
-		return 1;
-	}
-
-	// Start the audio stream. PortAudio will then start calling our callback function
-	// every time the soundcard needs audio.
-	// Note that this is non-blocking by default!
-	if (Pa_StartStream(pStream) != paNoError)
-	{
-		std::cerr << "Failed to start the PortAudio stream." << std::endl;
-		return 1;
-	}
-
-	// So here's where control would normally go back to your program, probably
-	// your GUI thread. The audio will be decoded and played back in a separate thread
-	// (managed by PortAudio) via the callback function we've defined below.
-	// Since we have no GUI to in this example, we're just going to sleep here
-	// for a while.
-
-	//Sleep(20000);
-
-
-	// Shutdown:
-	// First, stop the PortAudio stream (closes the soundcard device).
-	/*
-	if (Pa_StopStream(pStream) != paNoError)
-	{
-		std::cerr << "Failed to stop the PortAudio stream." << std::endl;
-		return 1;
-	}
-
-	// Tell the PortAudio library that we're all done with it.
-	if (Pa_Terminate() != paNoError)
-	{
-		std::cerr << "Failed to terminate PortAudio." << std::endl;
-		return 1;
-	}
-	*/
-
-	// Close the AudioDecoder object and free it.
-	delete pAudioDecoder;
-	
-
-	return 0;
-}
