@@ -1,6 +1,11 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+#define GLFW_INCLUDE_VULKAN
+#include <glfw3.h>
+
+#include "vulkan.h"
+
 #include <memory>
 #include <audio.h>
 
@@ -11,28 +16,31 @@ public:
 	Engine();
 	~Engine();
 
-	bool isDebug();
-	bool isReady();
-
-	std::shared_ptr<Audio> getAudio();
+	void run();
 
 private:
-	bool debug;
-	bool ready;
+	bool _debug;
 
-	bool pre_init();
-	bool init_graphics();
-	bool init_physics();
-	bool init_audio();
-	bool post_init();
+	bool _pre_init();
+	bool _init_window();
+	bool _init_audio();
 
-	bool pre_deinit();
-	bool deinit_graphics();
-	bool deinit_physics();
-	bool deinit_audio();
-	bool post_deinit();
+	//VULKAN INIT
+	bool _init_vulkan();
 
-    std::shared_ptr<Audio> audio;
+
+	bool _post_init();
+	bool _main_loop();
+
+
+	GLFWwindow * _window;
+
+	int _window_width;
+	int _window_height;
+
+    std::shared_ptr<Audio> _audio;
+	std::shared_ptr<Vulkan> _vulkan;
+
 };
 
 #endif // ENGINE_H

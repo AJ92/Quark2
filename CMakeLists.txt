@@ -1,6 +1,20 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.1)
 
 project(engine_project)
+
+# Basically QT setting
+
+# new cpp standard
+#set(CMAKE_CXX_STANDARD 14)
+# Find includes in corresponding build directories
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+# Instruct CMake to run moc automatically when needed.
+set(CMAKE_AUTOMOC ON)
+
+# Find the QtWidgets library
+find_package(Qt5Widgets)
+
+
 
 ###############################################################################
 ## file globbing ##############################################################
@@ -23,7 +37,7 @@ file(GLOB_RECURSE sources_test src/test/*.cpp)
 add_executable(engine ${sources} ${data})
 
 # just for example add some compiler flags
-target_compile_options(engine PUBLIC -std=c++1y -Wall)
+target_compile_options(engine PUBLIC -Wall)
 
 # this lets me include files relative to the root src dir with a <> pair
 target_include_directories(engine PUBLIC src/main)
@@ -36,8 +50,23 @@ file(COPY ${data} DESTINATION resources)
 ## dependencies ###############################################################
 ###############################################################################
 
+
+#QT
+target_link_libraries(engine PUBLIC Qt5::Widgets)
+
+
+
 #opengl
 target_link_libraries(engine PUBLIC opengl32)
+
+
+#Vulkan
+target_include_directories(engine PUBLIC C:/VulkanSDK/1.0.46.0/Include)
+
+target_link_libraries(engine PUBLIC debug C:/VulkanSDK/1.0.46.0/Lib/vulkan-1.lib)
+target_link_libraries(engine PUBLIC optimized C:/VulkanSDK/1.0.46.0/Lib/vulkan-1.lib)
+
+
 
 #GLFW
 target_include_directories(engine PUBLIC thirdparty/glfw/include)
@@ -47,12 +76,17 @@ target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdp
 
 
 
+#GLM
+target_include_directories(engine PUBLIC thirdparty/glm/include)
+
+
 
 #PORTAUDIO
 target_include_directories(engine PUBLIC thirdparty/portaudio/include)
 
 target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/portaudio/bin/Debug/portaudio_static_x64.lib)
 target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/portaudio/bin/Release/portaudio_static_x64.lib)
+
 
 
 #LIBSNDFILE
