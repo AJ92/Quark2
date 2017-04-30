@@ -81,6 +81,10 @@ private:
 	VkPresentModeKHR _choose_swap_present_mode(const std::vector<VkPresentModeKHR> availablePresentModes);
 	VkExtent2D _choose_swap_extent(const VkSurfaceCapabilitiesKHR& capabilities);
 	bool _create_swap_chain();
+	//VULKAN IMAGE VIEWS
+	bool _create_image_views();
+	//VULKAN GFX PIPELINES
+	bool _create_graphics_pipeline();
 
 	bool _post_init();
 
@@ -115,6 +119,7 @@ private:
 	VkFormat _swap_chain_image_format;
 	VkExtent2D _swap_chain_extent;
 
+	std::vector<VDeleter<VkImageView>> _swap_chain_image_views;
 };
 
 #endif // VULKAN_H

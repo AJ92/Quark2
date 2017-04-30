@@ -40,6 +40,10 @@ bool Vulkan::_init_vulkan() {
 	_pick_physical_device();
 	_create_logical_device();
 	_create_swap_chain();
+	_create_image_views();
+
+	_create_graphics_pipeline();
+
 	return true;
 }
 
@@ -462,7 +466,8 @@ bool Vulkan::_create_swap_chain() {
 	createInfo.presentMode = presentMode;
 	createInfo.clipped = VK_TRUE; //dont bother with pixels that are not visible...
 
-	createInfo.oldSwapchain = VK_NULL_HANDLE; //handle to old swapchain... (todo...)
+	//TODO:
+	createInfo.oldSwapchain = VK_NULL_HANDLE; //handle to old swapchain...
 
 	if (vkCreateSwapchainKHR(_vulkan_device, &createInfo, nullptr, _swap_chain.replace()) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create swap chain!");
@@ -478,6 +483,41 @@ bool Vulkan::_create_swap_chain() {
 	_swap_chain_extent = extent;
 
 	return true;
+}
+
+bool Vulkan::_create_image_views() {
+	_swap_chain_image_views.resize(_swap_chain_images.size(), VDeleter<VkImageView>{_vulkan_device, vkDestroyImageView});
+
+	for (uint32_t i = 0; i < _swap_chain_images.size(); i++) {
+		VkImageViewCreateInfo createInfo = {};
+		createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+		createInfo.image = _swap_chain_images[i];
+
+		createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+		createInfo.format = _swap_chain_image_format;
+
+		createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+		createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+		createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+		createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+
+		createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		createInfo.subresourceRange.baseMipLevel = 0;
+		createInfo.subresourceRange.levelCount = 1;
+		createInfo.subresourceRange.baseArrayLayer = 0;
+		createInfo.subresourceRange.layerCount = 1;
+
+		if (vkCreateImageView(_vulkan_device, &createInfo, nullptr, _swap_chain_image_views[i].replace()) != VK_SUCCESS) {
+			throw std::runtime_error("failed to create image views!");
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool Vulkan::_create_graphics_pipeline() {
+
 }
 
 bool Vulkan::_post_init() {
