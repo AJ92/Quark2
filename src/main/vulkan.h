@@ -6,6 +6,7 @@
 #include <glfw3.h>
 
 #include <iostream>
+#include <fstream>
 #include <set>
 #include <algorithm>
 #include <memory>
@@ -85,6 +86,8 @@ private:
 	bool _create_image_views();
 	//VULKAN GFX PIPELINES
 	bool _create_graphics_pipeline();
+	static std::vector<char> _read_file(const std::string& filename);
+	bool _create_shader_module(const std::vector<char>& code, VDeleter<VkShaderModule>& shaderModule);
 
 	bool _post_init();
 
