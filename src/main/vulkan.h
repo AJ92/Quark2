@@ -123,6 +123,8 @@ private:
 	VkExtent2D _swap_chain_extent;
 
 	std::vector<VDeleter<VkImageView>> _swap_chain_image_views;
+
+	VDeleter<VkPipelineLayout> pipelineLayout{ _vulkan_device, vkDestroyPipelineLayout };
 };
 
 #endif // VULKAN_H
