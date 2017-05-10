@@ -22,6 +22,8 @@ public:
 	Vulkan(GLFWwindow * glfw_win, int win_width, int win_height, bool debugMode);
 	~Vulkan();
 
+	void drawFrame();
+
 	struct QueueFamilyIndices {
 		int graphicsFamily = -1;
 		int presentFamily = -1;
@@ -88,7 +90,16 @@ private:
 	bool _create_graphics_pipeline();
 	static std::vector<char> _read_file(const std::string& filename);
 	bool _create_shader_module(const std::vector<char>& code, VDeleter<VkShaderModule>& shaderModule);
-
+	//VULKAN RENDER PASS
+	bool _create_render_pass();
+	//VULKAN FRAMEBFFERS
+	bool _create_framebuffers();
+	//VULKAN COMMAND POOL
+	bool _create_command_pool();
+	//VULKAN COMMAND BUFFERS
+	bool _create_command_buffers();
+	//VULKAN SEMAPHORES
+	bool _create_semaphores();
 	bool _post_init();
 
 
@@ -124,7 +135,21 @@ private:
 
 	std::vector<VDeleter<VkImageView>> _swap_chain_image_views;
 
-	VDeleter<VkPipelineLayout> pipelineLayout{ _vulkan_device, vkDestroyPipelineLayout };
+	VDeleter<VkPipelineLayout> _pipeline_layout{ _vulkan_device, vkDestroyPipelineLayout };
+
+	VDeleter<VkRenderPass> _render_pass{ _vulkan_device, vkDestroyRenderPass };
+
+	VDeleter<VkPipeline> _graphics_pipeline{ _vulkan_device, vkDestroyPipeline };
+
+	std::vector<VDeleter<VkFramebuffer>> _swap_chain_framebuffers;
+
+	VDeleter<VkCommandPool> _command_pool{ _vulkan_device, vkDestroyCommandPool };
+
+	std::vector<VkCommandBuffer> _command_buffers;
+
+	//RENDERING
+	VDeleter<VkSemaphore> _image_available_semaphore{ _vulkan_device, vkDestroySemaphore };
+	VDeleter<VkSemaphore> _render_finished_semaphore{ _vulkan_device, vkDestroySemaphore };
 };
 
 #endif // VULKAN_H

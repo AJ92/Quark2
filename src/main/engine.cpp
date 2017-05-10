@@ -77,6 +77,7 @@ bool Engine::_post_init() {
 bool Engine::_main_loop() {
 	while (!glfwWindowShouldClose(_window)) {
 		glfwPollEvents();
+		_vulkan->drawFrame();
 	}
 
 	glfwDestroyWindow(_window);
