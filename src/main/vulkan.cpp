@@ -218,10 +218,10 @@ bool Vulkan::_pick_physical_device() {
 }
 
 bool Vulkan::_is_device_suitable(VkPhysicalDevice device) {
-	//find queue families 
+	//find queue families
 	QueueFamilyIndices indices = _find_queue_families(device);
 
-	//check if extensions are supported 
+	//check if extensions are supported
 	bool extensionsSupported = _check_device_extension_support(device);
 
 	//check if swapchain extension is adequate
@@ -521,8 +521,8 @@ bool Vulkan::_create_image_views() {
 
 bool Vulkan::_create_graphics_pipeline() {
 	//PROGRAMMABLE
-	auto vertShaderCode = _read_file("../src/main/shader/test/vert.spv");
-	auto fragShaderCode = _read_file("../src/main/shader/test/frag.spv");
+	auto vertShaderCode = _read_file("./resources/vert.spv");
+	auto fragShaderCode = _read_file("./resources/frag.spv");
 
 	std::cout << "loading shaders" << std::endl;
 	std::cout << "\t" << "vertex shader size: " << vertShaderCode.size() << " bytes" << std::endl;
@@ -617,7 +617,7 @@ bool Vulkan::_create_graphics_pipeline() {
 	//COLORBLENDING
 	VkPipelineColorBlendAttachmentState colorBlendAttachment = {};
 	colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-	
+
 	//NO BLENDING
 	colorBlendAttachment.blendEnable = VK_FALSE;
 	colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_ONE; // Optional
@@ -640,7 +640,7 @@ bool Vulkan::_create_graphics_pipeline() {
 
 	VkPipelineColorBlendStateCreateInfo colorBlending = {};
 	colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-	colorBlending.logicOpEnable = VK_FALSE; 
+	colorBlending.logicOpEnable = VK_FALSE;
 	colorBlending.logicOp = VK_LOGIC_OP_COPY; // Optional
 	colorBlending.attachmentCount = 1;
 	colorBlending.pAttachments = &colorBlendAttachment;
@@ -712,7 +712,7 @@ std::vector<char> Vulkan::_read_file(const std::string& filename) {
 	std::ifstream file(filename, std::ios::ate | std::ios::binary);
 
 	if (!file.is_open()) {
-		throw std::runtime_error("readFile: failed to open file!");
+		throw std::runtime_error("readFile: failed to open file: " + filename);
 	}
 
 	size_t fileSize = (size_t)file.tellg();

@@ -1,0 +1,6 @@
+/home/aj/Code/Quark2/bin/CMakeFiles/package.dir
+/home/aj/Code/Quark2/bin/CMakeFiles/rebuild_cache.dir
+/home/aj/Code/Quark2/bin/CMakeFiles/edit_cache.dir
+/home/aj/Code/Quark2/bin/CMakeFiles/engine.dir
+/home/aj/Code/Quark2/bin/CMakeFiles/package_source.dir
+/home/aj/Code/Quark2/bin/CMakeFiles/engine_automoc.dir

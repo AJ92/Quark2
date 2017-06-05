@@ -7,7 +7,7 @@
 #include "vulkan.h"
 
 #include <memory>
-#include <audio.h>
+//#include <audio.h>
 
 
 class Engine
@@ -38,7 +38,7 @@ private:
 	int _window_width;
 	int _window_height;
 
-    std::shared_ptr<Audio> _audio;
+    //std::shared_ptr<Audio> _audio;
 	std::shared_ptr<Vulkan> _vulkan;
 
 };

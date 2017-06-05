@@ -6,6 +6,7 @@
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
 
+
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
@@ -14,15 +15,15 @@
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 	#define NOMINMAX
 	#include <Windows.h>
+
+
+    #define DBOUT( s )            \
+    {                             \
+       std::wostringstream os_;    \
+       os_ << s;                   \
+       OutputDebugStringW( os_.str().c_str() );  \
+    }
 #endif
-
-
-#define DBOUT( s )            \
-{                             \
-   std::wostringstream os_;    \
-   os_ << s;                   \
-   OutputDebugStringW( os_.str().c_str() );  \
-}
 
 
 int main(void)
@@ -34,7 +35,9 @@ int main(void)
 	}
 	catch (const std::runtime_error& e) {
 		std::cerr << e.what() << std::endl;
+		#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 		DBOUT("runtime error: " << e.what());
+		#endif
 		return EXIT_FAILURE;
 	}
 

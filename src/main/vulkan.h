@@ -10,7 +10,8 @@
 #include <set>
 #include <algorithm>
 #include <memory>
-#include <audio.h>
+#include <string.h>
+//#include <audio.h>
 
 #include "vdeleter.h"
 
