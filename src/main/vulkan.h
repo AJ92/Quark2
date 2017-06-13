@@ -137,6 +137,7 @@ private:
 		VkDeviceSize size, VkBufferUsageFlags usage,
 		VkMemoryPropertyFlags properties, VkBuffer& buffer,
 		VkDeviceMemory& bufferMemory);
+	bool _copy_buffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 	//VULKAN VERTEX BUFFER
 	bool _create_vertex_buffer();
 	uint32_t _find_memory_type(uint32_t typeFilter, VkMemoryPropertyFlags properties);

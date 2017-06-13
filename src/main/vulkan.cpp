@@ -897,18 +897,70 @@ bool Vulkan::_create_buffer(
 	return true;
 }
 
+bool Vulkan::_copy_buffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
+	VkCommandBufferAllocateInfo allocInfo = {};
+	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+	allocInfo.commandPool = _command_pool;
+	allocInfo.commandBufferCount = 1;
+
+	VkCommandBuffer commandBuffer;
+	vkAllocateCommandBuffers(_vulkan_device, &allocInfo, &commandBuffer);
+
+	VkCommandBufferBeginInfo beginInfo = {};
+	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+
+	vkBeginCommandBuffer(commandBuffer, &beginInfo);
+
+	VkBufferCopy copyRegion = {};
+	copyRegion.srcOffset = 0; // Optional
+	copyRegion.dstOffset = 0; // Optional
+	copyRegion.size = size;
+	vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
+
+	vkEndCommandBuffer(commandBuffer);
+
+	VkSubmitInfo submitInfo = {};
+	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+	submitInfo.commandBufferCount = 1;
+	submitInfo.pCommandBuffers = &commandBuffer;
+
+	vkQueueSubmit(_graphics_queue, 1, &submitInfo, VK_NULL_HANDLE);
+	vkQueueWaitIdle(_graphics_queue);
+
+	vkFreeCommandBuffers(_vulkan_device, _command_pool, 1, &commandBuffer);
+
+	return true;
+}
+
+
 bool Vulkan::_create_vertex_buffer() {
 	VkDeviceSize bufferSize = sizeof(_vertices[0]) * _vertices.size();
+
+	VkBuffer stagingBuffer;
+	VkDeviceMemory stagingBufferMemory;
 	_create_buffer(
 		bufferSize,
-		VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+		VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-		_vertex_buffer, _vertex_buffer_memory);
+		stagingBuffer, stagingBufferMemory);
 
 	void* data;
-	vkMapMemory(_vulkan_device, _vertex_buffer_memory, 0, bufferSize, 0, &data);
+	vkMapMemory(_vulkan_device, stagingBufferMemory, 0, bufferSize, 0, &data);
 	memcpy(data, _vertices.data(), (size_t)bufferSize);
-	vkUnmapMemory(_vulkan_device, _vertex_buffer_memory);
+	vkUnmapMemory(_vulkan_device, stagingBufferMemory);
+
+	_create_buffer(
+		bufferSize,
+		VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+		_vertex_buffer, _vertex_buffer_memory);
+
+	_copy_buffer(stagingBuffer, _vertex_buffer, bufferSize);
+
+	vkDestroyBuffer(_vulkan_device, stagingBuffer, nullptr);
+	vkFreeMemory(_vulkan_device, stagingBufferMemory, nullptr);
 
 	return true;
 }
