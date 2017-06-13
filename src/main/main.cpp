@@ -1,3 +1,4 @@
+#include <vld.h> //check for mem leaks
 #include "engine.h"
 
 

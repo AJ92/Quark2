@@ -8,14 +8,45 @@
 #include <iostream>
 #include <fstream>
 #include <set>
+#include <array>
 #include <algorithm>
 #include <memory>
+#include <vector>
 #include <string.h>
+
+#include "glm/glm.hpp"
 //#include <audio.h>
 
-#include "vdeleter.h"
 
+struct Vertex {
+	glm::vec2 pos;
+	glm::vec3 color;
 
+	static VkVertexInputBindingDescription getBindingDescription() {
+		VkVertexInputBindingDescription bindingDescription = {};
+		bindingDescription.binding = 0;
+		bindingDescription.stride = sizeof(Vertex);
+		bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+		return bindingDescription;
+	}
+
+	static std::array<VkVertexInputAttributeDescription, 2> getAttributeDescriptions() {
+		std::array<VkVertexInputAttributeDescription, 2> attributeDescriptions = {};
+
+		attributeDescriptions[0].binding = 0;
+		attributeDescriptions[0].location = 0;
+		attributeDescriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
+		attributeDescriptions[0].offset = offsetof(Vertex, pos);
+
+		attributeDescriptions[1].binding = 0;
+		attributeDescriptions[1].location = 1;
+		attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+		attributeDescriptions[1].offset = offsetof(Vertex, color);
+
+		return attributeDescriptions;
+	}
+};
 
 class Vulkan
 {
@@ -24,6 +55,7 @@ public:
 	~Vulkan();
 
 	void drawFrame();
+	bool cleanUp();
 
 	struct QueueFamilyIndices {
 		int graphicsFamily = -1;
@@ -81,22 +113,33 @@ private:
 	bool _check_device_extension_support(VkPhysicalDevice device);
 	SwapChainSupportDetails _query_swap_chain_support(VkPhysicalDevice device);
 	//VULKAN SWAPCHAIN CONFIG
-	VkSurfaceFormatKHR _choose_swap_surface_format(const std::vector<VkSurfaceFormatKHR>& availableFormats);
-	VkPresentModeKHR _choose_swap_present_mode(const std::vector<VkPresentModeKHR> availablePresentModes);
+	VkSurfaceFormatKHR _choose_swap_surface_format(
+		const std::vector<VkSurfaceFormatKHR>& availableFormats);
+	VkPresentModeKHR _choose_swap_present_mode(
+		const std::vector<VkPresentModeKHR> availablePresentModes);
 	VkExtent2D _choose_swap_extent(const VkSurfaceCapabilitiesKHR& capabilities);
 	bool _create_swap_chain();
+	bool _clean_up_swap_chain();
 	//VULKAN IMAGE VIEWS
 	bool _create_image_views();
 	//VULKAN GFX PIPELINES
 	bool _create_graphics_pipeline();
 	static std::vector<char> _read_file(const std::string& filename);
-	bool _create_shader_module(const std::vector<char>& code, VDeleter<VkShaderModule>& shaderModule);
+	bool _create_shader_module(const std::vector<char>& code, VkShaderModule& shaderModule);
 	//VULKAN RENDER PASS
 	bool _create_render_pass();
 	//VULKAN FRAMEBFFERS
 	bool _create_framebuffers();
 	//VULKAN COMMAND POOL
 	bool _create_command_pool();
+	//VULKAN BUFFER
+	bool _create_buffer(
+		VkDeviceSize size, VkBufferUsageFlags usage,
+		VkMemoryPropertyFlags properties, VkBuffer& buffer,
+		VkDeviceMemory& bufferMemory);
+	//VULKAN VERTEX BUFFER
+	bool _create_vertex_buffer();
+	uint32_t _find_memory_type(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 	//VULKAN COMMAND BUFFERS
 	bool _create_command_buffers();
 	//VULKAN SEMAPHORES
@@ -111,46 +154,50 @@ private:
 	int _window_height;
 	int _window_width;
 
-	VDeleter<VkInstance> _vulkan_instance{ vkDestroyInstance };
-	VDeleter<VkDebugReportCallbackEXT> _debug_callback_instance{ _vulkan_instance, _destroy_debug_report_callback_EXT };
+	VkInstance _vulkan_instance;
+	VkDebugReportCallbackEXT _debug_callback_instance;
 
-	VDeleter<VkSurfaceKHR> _vulkan_surface{ _vulkan_instance, vkDestroySurfaceKHR };
+	VkSurfaceKHR _vulkan_surface;
 
-	//Automagically destroyed once _vulkan_instance (VkInstance) is destroyed
 	VkPhysicalDevice _physical_device = VK_NULL_HANDLE;
+	VkDevice _vulkan_device; //logical device
 
-	//must be under _vulkan_instance to get deleted before it!!!
-	VDeleter<VkDevice> _vulkan_device{ vkDestroyDevice }; //logical device
-
-	//Automagically destroyed once the device is cleaned up...
 	VkQueue _graphics_queue;
-
 	VkQueue _present_queue;
 
-	VDeleter<VkSwapchainKHR> _swap_chain{ _vulkan_device, vkDestroySwapchainKHR };
+	VkSwapchainKHR _swap_chain;
 
 	std::vector<VkImage> _swap_chain_images;
 
 	VkFormat _swap_chain_image_format;
 	VkExtent2D _swap_chain_extent;
 
-	std::vector<VDeleter<VkImageView>> _swap_chain_image_views;
+	std::vector<VkImageView> _swap_chain_image_views;
 
-	VDeleter<VkPipelineLayout> _pipeline_layout{ _vulkan_device, vkDestroyPipelineLayout };
+	VkPipelineLayout _pipeline_layout;
 
-	VDeleter<VkRenderPass> _render_pass{ _vulkan_device, vkDestroyRenderPass };
+	VkRenderPass _render_pass;
 
-	VDeleter<VkPipeline> _graphics_pipeline{ _vulkan_device, vkDestroyPipeline };
+	VkPipeline _graphics_pipeline;
 
-	std::vector<VDeleter<VkFramebuffer>> _swap_chain_framebuffers;
+	std::vector<VkFramebuffer> _swap_chain_framebuffers;
 
-	VDeleter<VkCommandPool> _command_pool{ _vulkan_device, vkDestroyCommandPool };
+	VkCommandPool _command_pool;
+
+	VkBuffer _vertex_buffer;
+	VkDeviceMemory _vertex_buffer_memory;
 
 	std::vector<VkCommandBuffer> _command_buffers;
 
 	//RENDERING
-	VDeleter<VkSemaphore> _image_available_semaphore{ _vulkan_device, vkDestroySemaphore };
-	VDeleter<VkSemaphore> _render_finished_semaphore{ _vulkan_device, vkDestroySemaphore };
+	VkSemaphore _image_available_semaphore;
+	VkSemaphore _render_finished_semaphore;
+
+	const std::vector<Vertex> _vertices = {
+		{ { 0.0f, -0.5f },{ 1.0f, 0.0f, 1.0f } },
+		{ { 0.5f, 0.5f },{ 1.0f, 1.0f, 0.0f } },
+		{ { -0.5f, 0.5f },{ 0.0f, 1.0f, 1.0f } }
+	};
 };
 
 #endif // VULKAN_H

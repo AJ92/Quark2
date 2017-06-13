@@ -4,8 +4,10 @@ project(engine_project)
 
 # Basically QT setting
 
-# new cpp standard
-set(CMAKE_CXX_STANDARD 14)
+if (UNIX) #msvc compiler does not need this flag ...
+  # new cpp standard
+  set(CMAKE_CXX_STANDARD 14)
+endif (UNIX)
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed.
@@ -67,21 +69,22 @@ if (WIN32)
 
     #GLFW
     target_include_directories(engine PUBLIC thirdparty/glfw/include)
-    target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glfw/bin/Debug/glfw3.lib)
-    target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glfw/bin/Release/glfw3.lib)
+    target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glfw/windows/bin/Debug/glfw3.lib)
+    target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glfw/windows/bin/Release/glfw3.lib)
 
     #GLM
     include_directories(engine PUBLIC thirdparty/glm/include)
 
+	
     #PORTAUDIO
-    target_include_directories(engine PUBLIC thirdparty/portaudio/include)
-    target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/portaudio/bin/Debug/portaudio_static_x64.lib)
-    target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/portaudio/bin/Release/portaudio_static_x64.lib)
+    #target_include_directories(engine PUBLIC thirdparty/portaudio/include)
+    #target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/portaudio/bin/Debug/portaudio_static_x64.lib)
+    #target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/portaudio/bin/Release/portaudio_static_x64.lib)
 
     #LIBSNDFILE
-    target_include_directories(engine PUBLIC thirdparty/libsndfile/include)
-    target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/libsndfile/bin/Release/libsndfile-1.lib)
-    target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/libsndfile/bin/Release/libsndfile-1.lib)
+    #target_include_directories(engine PUBLIC thirdparty/libsndfile/include)
+    #target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/libsndfile/bin/Release/libsndfile-1.lib)
+    #target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/libsndfile/bin/Release/libsndfile-1.lib)
 
 endif (WIN32)
 

@@ -32,7 +32,7 @@ void Engine::run() {
 bool Engine::_pre_init() {
 #ifndef _DEBUG
 #	if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-	FreeConsole();
+	//FreeConsole();
 #	endif
 	std::cout << "RELEASE" << std::endl;
 	_debug = false;
@@ -79,9 +79,8 @@ bool Engine::_main_loop() {
 		glfwPollEvents();
 		_vulkan->drawFrame();
 	}
-
+	_vulkan->cleanUp();
 	glfwDestroyWindow(_window);
-
 	glfwTerminate();
 	return true;
 }
