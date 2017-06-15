@@ -48,8 +48,9 @@ target_include_directories(engine PUBLIC src/main)
 # this copies all resource files in the build directory
 # we need this, because we want to work with paths relative to the executable
 #file(COPY ${data} DESTINATION resources)
-install(DIRECTORY src/resources/ DESTINATION resources
-          FILES_MATCHING PATTERN "*.spv *.jpg *.png")
+file(COPY src/resources/ DESTINATION resources FILES_MATCHING PATTERN "*.spv")
+file(COPY src/resources/ DESTINATION resources FILES_MATCHING PATTERN "*.jpg")
+file(COPY src/resources/ DESTINATION resources FILES_MATCHING PATTERN "*.png")
 
 ###############################################################################
 ## dependencies ###############################################################

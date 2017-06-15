@@ -604,8 +604,8 @@ bool Vulkan::_create_descriptor_set_layout() {
 
 bool Vulkan::_create_graphics_pipeline() {
 	//PROGRAMMABLE
-	auto vertShaderCode = _read_file("./resources/vert.spv");
-	auto fragShaderCode = _read_file("./resources/frag.spv");
+	auto vertShaderCode = _read_file("./resources/shader/test/vert.spv");
+	auto fragShaderCode = _read_file("./resources/shader/test/frag.spv");
 
 	std::cout << "loading shaders" << std::endl;
 	std::cout << "\t" << "vertex shader size: " << vertShaderCode.size() << " bytes" << std::endl;
@@ -975,7 +975,7 @@ bool Vulkan::_create_image(
 bool Vulkan::_create_texture_image() {
 	int texWidth, texHeight, texChannels;
 	stbi_uc* pixels = stbi_load(
-		"resources/texture.jpg",
+		"resources/textures/texture.jpg",
 		&texWidth, &texHeight,
 		&texChannels,
 		STBI_rgb_alpha);
