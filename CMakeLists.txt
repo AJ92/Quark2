@@ -92,6 +92,8 @@ if (WIN32)
     #target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/libsndfile/bin/Release/libsndfile-1.lib)
     #target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/libsndfile/bin/Release/libsndfile-1.lib)
 
+
+
 endif (WIN32)
 
 
@@ -116,8 +118,9 @@ if (UNIX)
     target_link_libraries(engine PUBLIC -lX11 -lXxf86vm -lXrandr -lpthread -lXi -ldl -lXinerama -lXcursor)
 endif (UNIX)
 
-
-
+#remove the console
+#set_target_properties(engine PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS")
+#set_target_properties(engine PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:WINDOWS")
 
 ###############################################################################
 ## packaging ##################################################################

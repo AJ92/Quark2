@@ -18,6 +18,7 @@
 #include <string.h>
 
 #define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -142,7 +143,8 @@ private:
 	bool _recreate_swap_chain();
 	bool _clean_up_swap_chain();
 //VULKAN IMAGE VIEWS
-	VkImageView _create_image_view(VkImage image, VkFormat format);
+	VkImageView _create_image_view(
+		VkImage image, VkFormat format, VkImageAspectFlags aspectFlags);
 	bool _create_image_views();
 //VULKAN DESCRIPTORSETS
 	bool _create_descriptor_set_layout();
@@ -159,6 +161,14 @@ private:
 //VULKAN SINGLE TIME COMMANDS
 	VkCommandBuffer _begin_single_time_commands();
 	void _end_single_time_commands(VkCommandBuffer commandBuffer);
+//VULKAN DEPTH RES
+	VkFormat _find_supported_format(
+		const std::vector<VkFormat>& candidates,
+		VkImageTiling tiling,
+		VkFormatFeatureFlags features);
+	VkFormat _find_depth_format();
+	bool Vulkan::_has_stencil_component(VkFormat format);
+	bool _create_depth_resources();
 //VULKAN TEXTURE IMAGE
 	bool _create_image(
 		uint32_t width, uint32_t height, VkFormat format,
@@ -222,6 +232,10 @@ private:
 
 	std::vector<VkImageView> _swap_chain_image_views;
 
+	VkImage _depth_image;
+	VkDeviceMemory _depth_image_memory;
+	VkImageView _depth_image_view;
+
 	VkDescriptorSetLayout _descriptor_set_layout;
 	VkPipelineLayout _pipeline_layout;
 
@@ -258,12 +272,18 @@ private:
 		{ { -0.5f, -0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } },
 		{ {  0.5f, -0.5f, 0.0f }, { 0.0f, 1.0f, 0.0f }, { 1.0f, 0.0f } },
 		{ {  0.5f,  0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } },
-		{ { -0.5f,  0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }
+		{ { -0.5f,  0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } },
+
+		{ { -0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } },
+		{ {  0.5f, -0.5f, -0.5f }, { 0.0f, 1.0f, 0.0f }, { 1.0f, 0.0f } },
+		{ {  0.5f,  0.5f, -0.5f }, { 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } },
+		{ { -0.5f,  0.5f, -0.5f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }
 	};
 
 	//16 bit cause we have less than 65535 unique vertices
 	const std::vector<uint16_t> _indices = {
-		0, 1, 2, 2, 3, 0
+		0, 1, 2, 2, 3, 0,
+		4, 5, 6, 6, 7, 4
 	};
 };
 
