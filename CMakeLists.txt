@@ -47,7 +47,9 @@ target_include_directories(engine PUBLIC src/main)
 
 # this copies all resource files in the build directory
 # we need this, because we want to work with paths relative to the executable
-file(COPY ${data} DESTINATION resources)
+#file(COPY ${data} DESTINATION resources)
+install(DIRECTORY src/resources/ DESTINATION resources
+          FILES_MATCHING PATTERN "*.spv *.jpg *.png")
 
 ###############################################################################
 ## dependencies ###############################################################
@@ -74,6 +76,9 @@ if (WIN32)
 
     #GLM
     include_directories(engine PUBLIC thirdparty/glm/include)
+
+	#STB
+	include_directories(engine PUBLIC thirdparty/stb/include)
 
 	
     #PORTAUDIO
@@ -103,6 +108,9 @@ if (UNIX)
 
     #GLM
     include_directories(engine PUBLIC thirdparty/glm/include)
+
+	#STB
+	include_directories(engine PUBLIC thirdparty/stb/include)
 
     target_link_libraries(engine PUBLIC -lX11 -lXxf86vm -lXrandr -lpthread -lXi -ldl -lXinerama -lXcursor)
 endif (UNIX)

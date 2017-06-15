@@ -39,6 +39,7 @@ int main(void)
 		#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 		DBOUT("runtime error: " << e.what());
 		#endif
+		Sleep(10000);
 		return EXIT_FAILURE;
 	}
 

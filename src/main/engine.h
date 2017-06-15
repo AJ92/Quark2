@@ -18,6 +18,8 @@ public:
 
 	void run();
 
+	std::shared_ptr<Vulkan> getVulkanRenderer();
+
 private:
 	bool _debug;
 
@@ -27,7 +29,7 @@ private:
 
 	//VULKAN INIT
 	bool _init_vulkan();
-
+	static void _on_window_resized(GLFWwindow* window, int width, int height);
 
 	bool _post_init();
 	bool _main_loop();

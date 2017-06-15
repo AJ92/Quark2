@@ -24,6 +24,10 @@ void Engine::run() {
 	_main_loop();
 }
 
+std::shared_ptr<Vulkan> Engine::getVulkanRenderer() {
+	return _vulkan;
+}
+
 
 ///////////////////////////////////////////////
 //
@@ -51,8 +55,10 @@ bool Engine::_init_window() {
 	_window_height = 600;
 
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-	_window = glfwCreateWindow(_window_width, _window_height, "Vulkan", nullptr, nullptr);
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+	_window = glfwCreateWindow(_window_width, _window_height, "Quark2", nullptr, nullptr);
+	glfwSetWindowUserPointer(_window, this);
+	glfwSetWindowSizeCallback(_window, Engine::_on_window_resized);
 
 	return true;
 }
@@ -60,6 +66,13 @@ bool Engine::_init_window() {
 bool Engine::_init_vulkan() {
 	_vulkan = std::make_shared<Vulkan>(_window, _window_width, _window_height, _debug);
 	return true;
+}
+
+void Engine::_on_window_resized(GLFWwindow* window, int width, int height) {
+	if (width == 0 || height == 0) return;
+
+	Engine* engine = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
+	engine->getVulkanRenderer()->windowResize(width, height);
 }
 
 bool Engine::_init_audio() {
@@ -77,6 +90,7 @@ bool Engine::_post_init() {
 bool Engine::_main_loop() {
 	while (!glfwWindowShouldClose(_window)) {
 		glfwPollEvents();
+		_vulkan->updateUniformBuffer();
 		_vulkan->drawFrame();
 	}
 	_vulkan->cleanUp();
