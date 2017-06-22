@@ -1,4 +1,4 @@
-#include <vld.h> //check for mem leaks
+//#include <vld.h> //check for mem leaks
 #include "engine.h"
 
 
@@ -43,10 +43,10 @@ int main(void)
 		DBOUT("runtime error: " << e.what());
 		#endif
 
-		Sleep(10000);
+		//Sleep(10000);
 		return EXIT_FAILURE;
 	}
 
-	Sleep(10000);
+	//Sleep(10000);
     return EXIT_SUCCESS;
 }

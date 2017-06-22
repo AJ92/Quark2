@@ -167,7 +167,7 @@ private:
 		VkImageTiling tiling,
 		VkFormatFeatureFlags features);
 	VkFormat _find_depth_format();
-	bool Vulkan::_has_stencil_component(VkFormat format);
+	bool _has_stencil_component(VkFormat format);
 	bool _create_depth_resources();
 //VULKAN TEXTURE IMAGE
 	bool _create_image(
