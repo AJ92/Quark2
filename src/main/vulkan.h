@@ -206,61 +206,61 @@ private:
 
 
 	//if in debug
-	bool _debug;
+	bool						_debug;
 
-	GLFWwindow * _glfw_window;
-	int _window_height;
-	int _window_width;
+	GLFWwindow *				_glfw_window;
+	int							_window_height;
+	int							_window_width;
 
-	VkInstance _vulkan_instance;
-	VkDebugReportCallbackEXT _debug_callback_instance;
+	VkInstance					_vulkan_instance;
+	VkDebugReportCallbackEXT	_debug_callback_instance;
 
-	VkSurfaceKHR _vulkan_surface;
+	VkSurfaceKHR				_vulkan_surface;
 
-	VkPhysicalDevice _physical_device = VK_NULL_HANDLE;
-	VkDevice _vulkan_device; //logical device
+	VkPhysicalDevice			_physical_device = VK_NULL_HANDLE;
+	VkDevice					_vulkan_device; //logical device
 
-	VkQueue _graphics_queue;
-	VkQueue _present_queue;
+	VkQueue						_graphics_queue;
+	VkQueue						_present_queue;
 
-	VkSwapchainKHR _swap_chain;
+	VkSwapchainKHR				_swap_chain;
 
-	std::vector<VkImage> _swap_chain_images;
+	std::vector<VkImage>		_swap_chain_images;
 
-	VkFormat _swap_chain_image_format;
-	VkExtent2D _swap_chain_extent;
+	VkFormat					_swap_chain_image_format;
+	VkExtent2D					_swap_chain_extent;
 
-	std::vector<VkImageView> _swap_chain_image_views;
+	std::vector<VkImageView>	_swap_chain_image_views;
 
-	VkImage _depth_image;
-	VkDeviceMemory _depth_image_memory;
-	VkImageView _depth_image_view;
+	VkImage						_depth_image;
+	VkDeviceMemory				_depth_image_memory;
+	VkImageView					_depth_image_view;
 
-	VkDescriptorSetLayout _descriptor_set_layout;
-	VkPipelineLayout _pipeline_layout;
+	VkDescriptorSetLayout		_descriptor_set_layout;
+	VkPipelineLayout			_pipeline_layout;
 
-	VkRenderPass _render_pass;
+	VkRenderPass				_render_pass;
 
-	VkPipeline _graphics_pipeline;
+	VkPipeline					_graphics_pipeline;
 
-	std::vector<VkFramebuffer> _swap_chain_framebuffers;
+	std::vector<VkFramebuffer>	_swap_chain_framebuffers;
 
-	VkCommandPool _command_pool;
+	VkCommandPool				_command_pool;
 
-	VkImage _texture_image;
-	VkDeviceMemory _texture_image_memory;
-	VkImageView _texture_image_view;
-	VkSampler _texture_sampler;
+	VkImage						_texture_image;
+	VkDeviceMemory				_texture_image_memory;
+	VkImageView					_texture_image_view;
+	VkSampler					_texture_sampler;
 
-	VkDescriptorPool _descriptor_pool;
-	VkDescriptorSet _descriptor_set;
+	VkDescriptorPool			_descriptor_pool;
+	VkDescriptorSet				_descriptor_set;
 
-	VkBuffer _vertex_buffer;
-	VkDeviceMemory _vertex_buffer_memory;
-	VkBuffer _index_buffer;
-	VkDeviceMemory _index_buffer_memory;
-	VkBuffer _uniform_buffer;
-	VkDeviceMemory _uniform_buffer_memory;
+	VkBuffer					_vertex_buffer;
+	VkDeviceMemory				_vertex_buffer_memory;
+	VkBuffer					_index_buffer;
+	VkDeviceMemory				_index_buffer_memory;
+	VkBuffer					_uniform_buffer;
+	VkDeviceMemory				_uniform_buffer_memory;
 
 	std::vector<VkCommandBuffer> _command_buffers;
 
@@ -285,6 +285,10 @@ private:
 		0, 1, 2, 2, 3, 0,
 		4, 5, 6, 6, 7, 4
 	};
+
+	//Test model loading...
+	const std::string MODEL_PATH = "models/chalet.obj";
+	const std::string TEXTURE_PATH = "textures/chalet.jpg";
 };
 
 #endif // VULKAN_H

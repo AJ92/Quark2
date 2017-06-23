@@ -51,6 +51,7 @@ target_include_directories(engine PUBLIC src/main)
 file(COPY src/resources/ DESTINATION resources FILES_MATCHING PATTERN "*.spv")
 file(COPY src/resources/ DESTINATION resources FILES_MATCHING PATTERN "*.jpg")
 file(COPY src/resources/ DESTINATION resources FILES_MATCHING PATTERN "*.png")
+file(COPY src/resources/ DESTINATION resources FILES_MATCHING PATTERN "*.obj")
 
 ###############################################################################
 ## dependencies ###############################################################
@@ -81,6 +82,8 @@ if (WIN32)
 	#STB
 	include_directories(engine PUBLIC thirdparty/stb/include)
 
+	#TINY OBJ LOADER
+	include_directories(engine PUBLIC thirdparty/tinyobjloader/include)
 	
     #PORTAUDIO
     #target_include_directories(engine PUBLIC thirdparty/portaudio/include)
@@ -115,6 +118,10 @@ if (UNIX)
 	#STB
 	include_directories(engine PUBLIC thirdparty/stb/include)
 
+	#TINY OBJ LOADER
+	include_directories(engine PUBLIC thirdparty/tinyobjloader/include)
+
+	#bla bla could also search for glfw but now i see what libs are linked...
     target_link_libraries(engine PUBLIC -lX11 -lXxf86vm -lXrandr -lpthread -lXi -ldl -lXinerama -lXcursor)
 endif (UNIX)
 
