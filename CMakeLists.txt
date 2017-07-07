@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1)
 
-project(engine_project)
+project(engine)
 
 # Basically QT setting
 
@@ -35,9 +35,10 @@ file(GLOB_RECURSE data          src/resources/*)
 ## target definitions #########################################################
 ###############################################################################
 
-# add the data to the target, so it becomes visible in some IDE
-add_executable(engine ${sources} ${data})
 
+add_executable(engine ${sources})
+# add the data to the target, so it becomes visible in some IDE
+# add_executable(engine ${data})
 
 # just for example add some compiler flags
 target_compile_options(engine PUBLIC -Wall)
