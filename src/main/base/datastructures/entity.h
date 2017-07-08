@@ -1,21 +1,22 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include <string>
 #include <memory>
 #include <map>
 
 class Entity
 {
 public:
+	Entity(std::string name);
 	Entity();
 	~Entity();
 
-private:
-	bool pre_init();
-	bool post_init();
+	std::string getIdentifier();
 
-	bool pre_deinit();
-	bool post_deinit();
+private:
+
+	std::string _identifier;
 };
 
-#endif // ENTITYMANAGEMENT_H
+#endif // ENTITY_H

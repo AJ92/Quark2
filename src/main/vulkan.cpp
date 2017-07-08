@@ -34,7 +34,6 @@ Vulkan::~Vulkan() {
 //		PRIVATE
 
 bool Vulkan::_pre_init() {
-
 	return true;
 }
 

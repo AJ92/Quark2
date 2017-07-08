@@ -25,7 +25,12 @@ find_package(Qt5Widgets)
 # these instructions search the directory tree when cmake is
 # invoked and put all files that match the pattern in the variables
 # `sources` and `data`
-file(GLOB_RECURSE sources       src/main/*.cpp src/main/*.h)
+file(GLOB_RECURSE sources       src/main/*.cpp src/main/*.h
+								src/main/base/*.cpp src/main/base/*.h
+								src/main/base/datastructures/*.cpp src/main/base/datastructures/*.h
+								src/main/base/datastructures/components/*.cpp src/main/base/datastructures/components/*.h	
+								src/main/base/systems/*.cpp src/main/base/systems/*.h)
+
 file(GLOB_RECURSE sources_test  src/test/*.cpp)
 file(GLOB_RECURSE data          src/resources/*)
 # you can use set(sources src/main.cpp) etc if you don't want to
@@ -62,6 +67,10 @@ file(COPY src/resources/ DESTINATION resources FILES_MATCHING PATTERN "*.obj")
 #QT
 target_link_libraries(engine PUBLIC Qt5::Widgets)
 
+#Python
+find_package(PythonLibs REQUIRED)
+include_directories(${PYTHON_INCLUDE_DIRS})
+target_link_libraries(engine PUBLIC ${PYTHON_LIBRARIES})
 
 if (WIN32)
     #opengl

@@ -19,6 +19,7 @@ void Engine::run() {
 	_pre_init();
 	_init_window();
 	_init_audio();
+	_init_python_scripting();
 	_init_vulkan();
 	_post_init();
 	_main_loop();
@@ -77,6 +78,11 @@ void Engine::_on_window_resized(GLFWwindow* window, int width, int height) {
 
 bool Engine::_init_audio() {
 	//_audio = std::make_shared<Audio>(_debug);
+	return true;
+}
+
+bool Engine::_init_python_scripting() {
+	_python_scripting = std::make_shared<ScriptSystem>();
 	return true;
 }
 

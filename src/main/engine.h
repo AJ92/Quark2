@@ -5,6 +5,7 @@
 #include <glfw3.h>
 
 #include "vulkan.h"
+#include "base\systems\scriptsystem.h"
 
 #include <memory>
 //#include <audio.h>
@@ -26,6 +27,7 @@ private:
 	bool _pre_init();
 	bool _init_window();
 	bool _init_audio();
+	bool _init_python_scripting();
 
 	//VULKAN INIT
 	bool _init_vulkan();
@@ -42,7 +44,7 @@ private:
 
     //std::shared_ptr<Audio> _audio;
 	std::shared_ptr<Vulkan> _vulkan;
-
+	std::shared_ptr<ScriptSystem> _python_scripting;
 };
 
 #endif // ENGINE_H
