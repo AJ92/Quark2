@@ -1,7 +1,7 @@
 #ifndef SCRIPT_H
 #define SCRIPT_H
 
-#include "base\datastructures\components\component.h"
+#include "base/datastructures/components/component.h"
 #include <Python.h>
 #include <memory>
 #include <map>

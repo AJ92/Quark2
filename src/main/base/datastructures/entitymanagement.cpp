@@ -1,5 +1,8 @@
 #include "entitymanagement.h"
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
+
 
 
 EntityManagement::EntityManagement() {
@@ -8,6 +11,32 @@ EntityManagement::EntityManagement() {
 
 EntityManagement::~EntityManagement() {
 
+}
+
+std::shared_ptr<Entity> EntityManagement::createEntity(std::string identifier){
+    //check if identifier is not used yet...
+    std::map<std::string, std::shared_ptr<Entity> >::iterator it_map;
+	it_map = _identifier_entity_map.find(identifier);
+
+	if (it_map == _identifier_entity_map.end()) {
+        //identifier not in the map yet so entity can use it
+        std::shared_ptr<Entity> entity = std::make_shared<Entity>(identifier);
+        _identifier_entity_map[identifier] = entity;
+        return entity;
+    }
+
+    //try a few times to create a new identifier...
+    std::srand(std::time(0));
+	for(int i = 0; i < 3; i++){
+        std::string new_identifier = identifier + "_" + std::to_string(std::rand());
+        it_map = _identifier_entity_map.find(identifier);
+        if (it_map == _identifier_entity_map.end()) {
+            std::shared_ptr<Entity> entity = std::make_shared<Entity>(new_identifier);
+            _identifier_entity_map[new_identifier] = entity;
+            return entity;
+        }
+	}
+    return std::shared_ptr<Entity>();
 }
 
 std::vector<std::shared_ptr<Component> > EntityManagement::getAllComponentsFromEntity(
@@ -51,5 +80,65 @@ std::vector<std::shared_ptr<Component> > EntityManagement::getAllComponentsByTyp
 	Component::Type type)
 {
 	return _component_management.getAllComponentsByType(type);
+}
+
+bool EntityManagement::addComponentToEntity(
+    std::shared_ptr<Entity> entity, std::shared_ptr<Component> comp)
+{
+	std::map<std::string, std::vector<std::shared_ptr<Component> > >::iterator it_map;
+	it_map = _identifier_component_list_map.find(entity->getIdentifier());
+
+	if (it_map == _identifier_component_list_map.end()) {
+        return false;
+	}
+
+    it_map->second.push_back(comp);
+    return true;
+}
+
+bool EntityManagement::removeComponentFromEntity(
+    std::shared_ptr<Entity> entity, std::shared_ptr<Component> comp)
+{
+    std::map<std::string, std::vector<std::shared_ptr<Component> > >::iterator it_map;
+	it_map = _identifier_component_list_map.find(entity->getIdentifier());
+
+	if (it_map == _identifier_component_list_map.end()) {
+        return false;
+	}
+
+
+	std::vector<std::shared_ptr<Component> >::iterator it_vec;
+	it_vec = std::find(it_map->second.begin(), it_map->second.end(), comp);
+
+	if (it_vec != it_map->second.end()) {
+		//delete the found element from the vector
+		it_map->second.erase(it_vec);
+		return true;
+	}
+
+    return false;
+}
+
+bool EntityManagement::removeComponentsFromEntityByType(
+    std::shared_ptr<Entity> entity, Component::Type type)
+{
+    std::map<std::string, std::vector<std::shared_ptr<Component> > >::iterator it_map;
+	it_map = _identifier_component_list_map.find(entity->getIdentifier());
+
+	if (it_map == _identifier_component_list_map.end()) {
+        return false;
+	}
+
+
+	for (std::vector<std::shared_ptr<Component> >::iterator it = it_map->second.begin();
+		it != it_map->second.end();
+		++it)
+	{
+		if ((*it)->getType() == type) {
+			it_map->second.erase(it);
+		}
+	}
+
+    return false;
 }
 

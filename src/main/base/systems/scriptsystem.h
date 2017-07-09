@@ -1,7 +1,7 @@
 #ifndef SCRIPTSYSTEM_H
 #define SCRIPTSYSTEM_H
 
-#include "base\systems\system.h"
+#include "base/systems/system.h"
 #include <Python.h>
 #include <memory>
 #include <map>

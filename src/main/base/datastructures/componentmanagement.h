@@ -6,7 +6,7 @@
 #include <map>
 #include <vector>
 
-#include "base\datastructures\components\component.h"
+#include "base/datastructures/components/component.h"
 
 class ComponentManagement
 {

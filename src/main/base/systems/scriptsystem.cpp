@@ -1,4 +1,4 @@
-#include "base\systems\scriptsystem.h"
+#include "base/systems/scriptsystem.h"
 #include <iostream>
 
 
@@ -16,7 +16,7 @@ ScriptSystem::ScriptSystem()
 
 ScriptSystem::~ScriptSystem()
 {
-
+    _deint_python();
 }
 
 void ScriptSystem::update() {
