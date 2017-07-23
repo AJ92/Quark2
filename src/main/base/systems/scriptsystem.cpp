@@ -60,7 +60,7 @@ bool ScriptSystem::_init_python() {
 		"print 'Today is',ctime(time())\n");
 
 	//test a script object...
-	std::string script_file = "script.py";
+	std::string script_file = "resources/script.py";
 	Script s(script_file);
 
 	return true;
