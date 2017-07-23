@@ -21,7 +21,7 @@ ScriptSystem::~ScriptSystem()
 
 void ScriptSystem::update() {
 	//todo:
-	
+
 }
 
 ///////////////////////////////////////////////
@@ -60,7 +60,7 @@ bool ScriptSystem::_init_python() {
 		"print 'Today is',ctime(time())\n");
 
 	//test a script object...
-	std::string script_file = "resources/script.py";
+	std::string script_file = "resources/scripts/script.py";
 	Script s(script_file);
 
 	return true;
