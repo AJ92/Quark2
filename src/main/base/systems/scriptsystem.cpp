@@ -4,14 +4,13 @@
 
 ScriptSystem::ScriptSystem()
 {
-	bool init_done = _init_python();
+	_init();
+}
 
-	if (init_done) {
-		std::cout << "Python initialized" << std::endl;
-	}
-	else {
-		std::cout << "Python initialization failed" << std::endl;
-	}
+ScriptSystem::ScriptSystem(std::shared_ptr<ComponentManagement> cm) :
+	_component_management(cm)
+{
+	_init();
 }
 
 ScriptSystem::~ScriptSystem()
@@ -20,12 +19,36 @@ ScriptSystem::~ScriptSystem()
 }
 
 void ScriptSystem::update() {
-
+	
 }
 
 ///////////////////////////////////////////////
 //
 //		PRIVATE
+
+bool ScriptSystem::_init() {
+	bool init_done = _init_python();
+
+	if (init_done) {
+		std::cout << "Python initialized" << std::endl;
+	}
+	else {
+		std::cout << "Python initialization failed" << std::endl;
+	}
+	return init_done;
+}
+
+bool ScriptSystem::_deinit() {
+	bool deinit_done = _deint_python();
+
+	if (deinit_done) {
+		std::cout << "Python deinitialized" << std::endl;
+	}
+	else {
+		std::cout << "Python deinitialization failed" << std::endl;
+	}
+	return deinit_done;
+}
 
 bool ScriptSystem::_init_python() {
 	Py_SetProgramName("Quark2");  /* optional but recommended */

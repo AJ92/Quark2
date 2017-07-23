@@ -25,6 +25,7 @@ private:
 	bool _debug;
 
 	bool _pre_init();
+	bool _init_component_management();
 	bool _init_window();
 	bool _init_audio();
 	bool _init_python_scripting();
@@ -41,6 +42,8 @@ private:
 
 	int _window_width;
 	int _window_height;
+
+	std::shared_ptr<ComponentManagement> _component_management;
 
     //std::shared_ptr<Audio> _audio;
 	std::shared_ptr<Vulkan> _vulkan;

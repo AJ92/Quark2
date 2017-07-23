@@ -17,6 +17,7 @@ Engine::~Engine() {
 
 void Engine::run() {
 	_pre_init();
+	_init_component_management();
 	_init_window();
 	_init_audio();
 	_init_python_scripting();
@@ -48,6 +49,12 @@ bool Engine::_pre_init() {
 
 	return true;
 }
+
+bool Engine::_init_component_management() {
+	_component_management = std::make_shared<ComponentManagement>();
+	return true;
+}
+
 
 bool Engine::_init_window() {
 	glfwInit();
@@ -96,6 +103,7 @@ bool Engine::_post_init() {
 bool Engine::_main_loop() {
 	while (!glfwWindowShouldClose(_window)) {
 		glfwPollEvents();
+		_python_scripting->update();
 		_vulkan->updateUniformBuffer();
 		_vulkan->drawFrame();
 	}
