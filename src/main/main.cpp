@@ -1,17 +1,18 @@
 //#include <vld.h> //check for mem leaks
-#include "engine.h"
 
+#include "engine.h"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
 
-
+#include <cstdio>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include <functional>
+
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 	#define NOMINMAX
@@ -28,11 +29,20 @@
 
 
 
-
 int main(void)
-//INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nCmdShow)
 {
+
+	std::cerr << "output is redirected to out.txt" << std::endl;
+	//redirect stdout to output.txt
+	//freopen("output.txt", "w", stdout);
+
+	std::ofstream out("out.txt");
+	std::streambuf *coutbuf = std::cout.rdbuf(); //save old buf
+	std::cout.rdbuf(out.rdbuf()); //redirect std::cout to out.txt!
+
 	Engine e;
+
+	bool success = true;
 
 	try {
 		e.run();
@@ -43,10 +53,14 @@ int main(void)
 		DBOUT("runtime error: " << e.what());
 		#endif
 
-		//Sleep(10000);
+		success = false;
+	}
+
+	std::cout.rdbuf(coutbuf); //reset to standard output again
+
+	if (!success) {
 		return EXIT_FAILURE;
 	}
 
-	//Sleep(10000);
     return EXIT_SUCCESS;
 }

@@ -58,6 +58,7 @@ file(COPY src/resources/ DESTINATION resources FILES_MATCHING PATTERN "*.spv")
 file(COPY src/resources/ DESTINATION resources FILES_MATCHING PATTERN "*.jpg")
 file(COPY src/resources/ DESTINATION resources FILES_MATCHING PATTERN "*.png")
 file(COPY src/resources/ DESTINATION resources FILES_MATCHING PATTERN "*.obj")
+file(COPY src/resources/ DESTINATION resources FILES_MATCHING PATTERN "*.py")
 
 ###############################################################################
 ## dependencies ###############################################################
@@ -71,6 +72,9 @@ target_link_libraries(engine PUBLIC Qt5::Widgets)
 find_package(PythonLibs REQUIRED)
 include_directories(${PYTHON_INCLUDE_DIRS})
 target_link_libraries(engine PUBLIC ${PYTHON_LIBRARIES})
+
+
+include_directories(engine PUBLIC thirdparty/pybind11/include)
 
 if (WIN32)
     #opengl
