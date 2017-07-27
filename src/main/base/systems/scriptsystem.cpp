@@ -2,7 +2,6 @@
 #include <iostream>
 
 
-
 ScriptSystem::ScriptSystem()
 {
 	_init();
@@ -21,7 +20,8 @@ ScriptSystem::~ScriptSystem()
 
 void ScriptSystem::update() {
 	//todo:
-
+	_script_1->update();
+	_script_2->update();
 }
 
 ///////////////////////////////////////////////
@@ -61,7 +61,9 @@ bool ScriptSystem::_init_python() {
 
 	//test a script object...
 	std::string script_file = "resources/scripts/script.py";
-	Script s(script_file);
+
+	_script_1  = std::make_shared<Script>(script_file);
+	_script_2 = std::make_shared<Script>(script_file);
 
 	return true;
 }

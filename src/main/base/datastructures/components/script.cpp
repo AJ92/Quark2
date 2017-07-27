@@ -3,7 +3,8 @@
 #include "scriptinstance.h"
 #include "pyscriptinstance.h"
 
-// DEFINE THE PYTHON MODULE
+
+/*
 PYBIND11_PLUGIN(Vulkan0Script)
 {
 	py::module m("Vulkan0Script", "Python based Vulkan0-Scripting");
@@ -18,6 +19,26 @@ PYBIND11_PLUGIN(Vulkan0Script)
 
 	return m.ptr();
 }
+*/
+
+
+PYBIND11_MODULE(Vulkan0Script, m)
+{
+	if (!_py_module_initialized) {
+		m.doc() = "Python based Vulkan0-Scripting";
+
+		py::class_<Script>(m, "Script")
+			;
+
+		py::class_<ScriptInstance, PyScriptInstance>(m, "ScriptInstance")
+			.def(py::init<Script*>()) // constructor
+			.def("test", &ScriptInstance::test) //member function
+			;
+
+		_py_module_initialized = true;
+	}
+}
+
 
 Script::Script() :
 	Component(Type::Script)
@@ -52,11 +73,12 @@ Script::~Script()
 }
 
 void Script::update() {
-
+	if(_py_update_f.ptr() != nullptr && _vscript.ptr() != nullptr)
+		_py_update_f(_vscript);
 }
 
 void Script::init() {
-
+	
 }
 
 ///////////////////////////////////////////////
@@ -71,15 +93,22 @@ bool Script::_init() {
 
 	try
 	{
-		pybind11_init();
+		pybind11_init_wrapper();
 
-		py::object main = py::module::import("__main__");
-		py::object globals = main.attr("__dict__");
-		py::object module = _import("vscript", _script_file, globals);
-		py::object VScript = module.attr("VScript");
-		py::object vscript = VScript(this);
+		
+		_main = py::module::import("__main__");
+		_globals = _main.attr("__dict__");
+		_module = _import("vscript", _script_file, _globals);
+		_module_vscript = _module.attr("VScript");
+		_vscript = _module_vscript(this);
 
-		vscript.attr("init")();
+		_py_init_f = _vscript.attr("init");
+		_py_init_f(); //call init in python object...
+
+		_py_update_f = _vscript.attr("update");
+		
+
+		
 	}
 	catch (const py::error_already_set& e)
 	{
