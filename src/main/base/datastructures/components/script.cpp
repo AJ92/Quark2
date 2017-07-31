@@ -3,7 +3,7 @@
 #include "scriptinstance.h"
 #include "pyscriptinstance.h"
 
-
+//deprecated
 /*
 PYBIND11_PLUGIN(Vulkan0Script)
 {
@@ -33,6 +33,7 @@ PYBIND11_MODULE(Vulkan0Script, m)
 		py::class_<ScriptInstance, PyScriptInstance>(m, "ScriptInstance")
 			.def(py::init<Script*>()) // constructor
 			.def("test", &ScriptInstance::test) //member function
+			.def("log", &ScriptInstance::log)
 			;
 
 		_py_module_initialized = true;
@@ -78,7 +79,8 @@ void Script::update() {
 }
 
 void Script::init() {
-	
+	if (_py_init_f.ptr() != nullptr && _vscript.ptr() != nullptr)
+	_py_init_f(); //call init in python object...
 }
 
 ///////////////////////////////////////////////
@@ -94,8 +96,7 @@ bool Script::_init() {
 	try
 	{
 		pybind11_init_wrapper();
-
-		
+	
 		_main = py::module::import("__main__");
 		_globals = _main.attr("__dict__");
 		_module = _import("vscript", _script_file, _globals);
@@ -103,11 +104,8 @@ bool Script::_init() {
 		_vscript = _module_vscript(this);
 
 		_py_init_f = _vscript.attr("init");
-		_py_init_f(); //call init in python object...
-
-		_py_update_f = _vscript.attr("update");
 		
-
+		_py_update_f = _vscript.attr("update");
 		
 	}
 	catch (const py::error_already_set& e)

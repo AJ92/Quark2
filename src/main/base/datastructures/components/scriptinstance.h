@@ -16,6 +16,8 @@ public:
 	virtual void init() = 0;
 	virtual void update() = 0;
 
+	virtual void log(std::string str);
+
 	//todo some functions here...
 	virtual void test();
 

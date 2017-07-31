@@ -11,3 +11,6 @@ void ScriptInstance::test() {
 	std::cout << "Script::test() called!" << std::endl;
 }
 
+void ScriptInstance::log(std::string str) {
+	std::cout << str << std::endl;
+}

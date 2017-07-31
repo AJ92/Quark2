@@ -60,10 +60,11 @@ bool ScriptSystem::_init_python() {
 		"print 'Today is',ctime(time())\n");
 
 	//test a script object...
-	std::string script_file = "resources/scripts/script.py";
+	std::string script_file1 = "resources/scripts/script1.py";
+	std::string script_file2 = "resources/scripts/script2.py";
 
-	_script_1  = std::make_shared<Script>(script_file);
-	_script_2 = std::make_shared<Script>(script_file);
+	_script_1  = std::make_shared<Script>(script_file1);
+	_script_2 = std::make_shared<Script>(script_file2);
 
 	return true;
 }
