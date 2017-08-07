@@ -1,20 +1,10 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.9)
 
 project(engine)
 
-# Basically QT setting
+set(CMAKE_CXX_STANDARD 14)
 
-if (UNIX) #msvc compiler does not need this flag ...
-  # new cpp standard
-  set(CMAKE_CXX_STANDARD 14)
-endif (UNIX)
-# Find includes in corresponding build directories
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-# Instruct CMake to run moc automatically when needed.
-set(CMAKE_AUTOMOC ON)
 
-# Find the QtWidgets library
-find_package(Qt5Widgets)
 
 
 
@@ -33,8 +23,13 @@ file(GLOB_RECURSE sources       src/main/*.cpp src/main/*.h
 
 file(GLOB_RECURSE sources_test  src/test/*.cpp)
 file(GLOB_RECURSE data          src/resources/*)
-# you can use set(sources src/main.cpp) etc if you don't want to
-# use globing to find files automatically
+
+
+###############################################################################
+## cmake auto moc fix
+list (APPEND sources "engine_automoc.cpp")
+set_property (SOURCE "engine_automoc.cpp" PROPERTY GENERATED TRUE)
+
 
 ###############################################################################
 ## target definitions #########################################################
@@ -63,10 +58,6 @@ file(COPY src/resources/ DESTINATION resources FILES_MATCHING PATTERN "*.py")
 ###############################################################################
 ## dependencies ###############################################################
 ###############################################################################
-
-
-#QT
-target_link_libraries(engine PUBLIC Qt5::Widgets)
 
 #Python
 find_package(PythonLibs REQUIRED)

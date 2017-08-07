@@ -2,6 +2,7 @@
 #define SHADER_H
 
 #include "base/datastructures/components/component.h"
+#include <string>
 
 class Shader: public Component
 {
