@@ -63,13 +63,13 @@ bool ScriptSystem::_init_python() {
 	std::string script_file1 = "resources/scripts/script1.py";
 	std::string script_file2 = "resources/scripts/script2.py";
 
-	_script_1  = std::make_shared<Script>(script_file1);
+	_script_1 = std::make_shared<Script>(script_file1);
 	_script_2 = std::make_shared<Script>(script_file2);
 
 	return true;
 }
 
 bool ScriptSystem::_deint_python() {
-	//Py_Finalize(); //possible segfault, need to check...
+	Py_Finalize(); //possible segfault, need to check...
 	return true;
 }

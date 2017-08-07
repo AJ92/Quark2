@@ -15,13 +15,11 @@ Component::Type Component::getType() {
 	return _type;
 }
 
-void Component::start() {
+void Component::init() {
 
 }
 void Component::update() {
 
 }
-void Component::end() {
 
-}
 

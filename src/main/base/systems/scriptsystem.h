@@ -5,7 +5,7 @@
 #include "base/datastructures/components/script.h"
 #include "base/datastructures/components/scriptinstance.h"
 #include "base/datastructures/components/pyscriptinstance.h"
-#include "base/datastructures/componentmanagement.h"
+#include "base/datastructures/management/componentmanagement.h"
 //#include <Python.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/eval.h>

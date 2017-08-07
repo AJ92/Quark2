@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.5)
 
 project(engine)
 
@@ -18,8 +18,12 @@ set(CMAKE_CXX_STANDARD 14)
 file(GLOB_RECURSE sources       src/main/*.cpp src/main/*.h
 								src/main/base/*.cpp src/main/base/*.h
 								src/main/base/datastructures/*.cpp src/main/base/datastructures/*.h
-								src/main/base/datastructures/components/*.cpp src/main/base/datastructures/components/*.h	
-								src/main/base/systems/*.cpp src/main/base/systems/*.h)
+                                src/main/base/datastructures/components/*.cpp src/main/base/datastructures/components/*.h	
+                                src/main/base/datastructures/management/*.cpp src/main/base/datastructures/management/*.h
+                                src/main/base/audio/*.cpp src/main/base/audio/*.h	
+                                src/main/base/vulkan/*.cpp src/main/base/vulkan/*.h		
+                                src/main/base/systems/*.cpp src/main/base/systems/*.h
+                                )
 
 file(GLOB_RECURSE sources_test  src/test/*.cpp)
 file(GLOB_RECURSE data          src/resources/*)

@@ -24,9 +24,8 @@ public:
 	Type getType();
 
 public:
-	virtual void start();
+	virtual void init();
 	virtual void update();
-	virtual void end();
 
 private:
 	Type _type;

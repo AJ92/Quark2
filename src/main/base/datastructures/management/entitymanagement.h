@@ -5,8 +5,8 @@
 #include <map>
 #include <vector>
 
-#include "base/datastructures/entity.h"
-#include "base/datastructures/componentmanagement.h"
+#include "base/datastructures/management/entity.h"
+#include "base/datastructures/management/componentmanagement.h"
 
 class EntityManagement
 {
