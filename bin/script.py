@@ -5,7 +5,7 @@ class VScript(ScriptInstance):
         ScriptInstance.__init__(self, script)
 
     def init(self):
-        self.log("init2")
+        print "init"
 
-    def update(self, o):
-        self.log("update2")
+    def update(self):
+        print "update"

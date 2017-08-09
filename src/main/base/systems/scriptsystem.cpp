@@ -19,9 +19,10 @@ ScriptSystem::~ScriptSystem()
 }
 
 void ScriptSystem::update() {
-	//todo:
-	_script_1->update();
-	_script_2->update();
+	std::vector<std::shared_ptr<Component> > comps = _component_management->getAllComponentsByType(Component::Script);
+	for (auto const& comp : comps) {
+		comp->update();
+	}
 }
 
 ///////////////////////////////////////////////
@@ -59,17 +60,10 @@ bool ScriptSystem::_init_python() {
 	PyRun_SimpleString("from time import time,ctime\n"
 		"print 'Today is',ctime(time())\n");
 
-	//test a script object...
-	std::string script_file1 = "resources/scripts/script1.py";
-	std::string script_file2 = "resources/scripts/script2.py";
-
-	_script_1 = std::make_shared<Script>(script_file1);
-	_script_2 = std::make_shared<Script>(script_file2);
-
 	return true;
 }
 
 bool ScriptSystem::_deint_python() {
-	Py_Finalize(); //possible segfault, need to check...
+	//Py_Finalize(); //segfault, need to check...
 	return true;
 }

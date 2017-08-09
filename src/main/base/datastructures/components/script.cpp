@@ -1,5 +1,6 @@
 #include "script.h"
 #include <iostream>
+#include <fstream>
 #include "scriptinstance.h"
 #include "pyscriptinstance.h"
 
@@ -44,6 +45,8 @@ PYBIND11_MODULE(Vulkan0Script, m)
 Script::Script() :
 	Component(Type::Script)
 {
+	_script_size = 0;
+
 	bool init_done = _init();
 
 	if (init_done) {
@@ -75,12 +78,31 @@ Script::~Script()
 
 void Script::update() {
 	if(_py_update_f.ptr() != nullptr && _vscript.ptr() != nullptr)
-		_py_update_f(_vscript);
+		_py_update_f(_vscript); //call update in python object...
 }
 
 void Script::init() {
 	if (_py_init_f.ptr() != nullptr && _vscript.ptr() != nullptr)
 	_py_init_f(); //call init in python object...
+}
+
+int Script::scriptSize(std::string script) {
+	if (script.empty()) {
+		return 0;
+	}
+	std::ifstream in(_script_file, std::ifstream::ate | std::ifstream::binary);
+	std::streampos pos = in.tellg();
+	return (int)pos;
+}
+
+bool Script::hasScriptChanged() {
+	bool changed = false;
+	int new_script_size = scriptSize(_script_file);
+	if (_script_size != new_script_size) {
+		changed = true;
+	}
+	_script_size = new_script_size;
+	return changed;
 }
 
 ///////////////////////////////////////////////
@@ -92,6 +114,8 @@ bool Script::_init() {
 	if (_script_file.empty()) {
 		return false;
 	}
+
+	_script_size = scriptSize(_script_file);
 
 	try
 	{
@@ -120,6 +144,16 @@ bool Script::_init() {
 
 bool Script::_deint() {
 	//TODO: ...
+	return true;
+}
+
+bool Script::_reinit() {
+	if (_script_file.empty()) {
+		return false;
+	}
+	std::ifstream in(_script_file, std::ifstream::ate | std::ifstream::binary);
+	std::streampos pos = in.tellg();
+
 	return true;
 }
 

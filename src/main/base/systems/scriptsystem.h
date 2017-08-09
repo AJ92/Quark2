@@ -31,10 +31,6 @@ private:
 	bool _deinit();
 	bool _init_python();
 	bool _deint_python();
-
-
-	std::shared_ptr<Script> _script_1;
-	std::shared_ptr<Script> _script_2;
 };
 
 #endif // PYTHONSCRIPTING_H

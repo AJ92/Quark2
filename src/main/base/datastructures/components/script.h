@@ -20,13 +20,19 @@ public:
 	virtual void init();
 	virtual void update();
 
+	int scriptSize(std::string script);
+	bool hasScriptChanged();
+
 private:
 	bool _init();
 	bool _deint();
 
+	bool _reinit();
+	
 	py::object _import(const std::string& module, const std::string& path, py::object& globals);
 
 	std::string _script_file;
+	int _script_size;
 
 	py::object _main;
 	py::object _globals;

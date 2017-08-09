@@ -20,7 +20,7 @@ void Engine::run() {
 	_init_component_management();
 	_init_window();
 	_init_audio();
-	_init_python_scripting();
+	_init_scripting();
 	_init_vulkan();
 	_post_init();
 	_main_loop();
@@ -55,7 +55,6 @@ bool Engine::_init_component_management() {
 	return true;
 }
 
-
 bool Engine::_init_window() {
 	glfwInit();
 
@@ -88,8 +87,8 @@ bool Engine::_init_audio() {
 	return true;
 }
 
-bool Engine::_init_python_scripting() {
-	_python_scripting = std::make_shared<ScriptSystem>();
+bool Engine::_init_scripting() {
+	_script_system = std::make_shared<ScriptSystem>(_component_management);
 	return true;
 }
 
@@ -97,13 +96,16 @@ bool Engine::_init_python_scripting() {
 bool Engine::_post_init() {
 	std::string filename2 = "C:/Code/VS/engine-main/engine/build/Debug/test3.flac";
 	//_audio->processEvent(AudioEventType::start, &_audio->getSound(filename2), true);
+
+	test_scripts();
+
 	return true;
 }
 
 bool Engine::_main_loop() {
 	while (!glfwWindowShouldClose(_window)) {
 		glfwPollEvents();
-		_python_scripting->update();
+		_script_system->update();
 		_vulkan->updateUniformBuffer();
 		_vulkan->drawFrame();
 	}
@@ -111,4 +113,33 @@ bool Engine::_main_loop() {
 	glfwDestroyWindow(_window);
 	glfwTerminate();
 	return true;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//TESTS only from here on...
+void Engine::test_scripts() {
+	//test a script object...
+	std::string script_file1 = "resources/scripts/script1.py";
+	std::string script_file2 = "resources/scripts/script2.py";
+
+	std::shared_ptr<Script> script_1 = std::make_shared<Script>(script_file1);
+	std::shared_ptr<Script> script_2 = std::make_shared<Script>(script_file2);
+
+	//add them to component management
+	_component_management->addComponent(script_1);
+	_component_management->addComponent(script_2);
 }

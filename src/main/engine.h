@@ -28,7 +28,7 @@ private:
 	bool _init_component_management();
 	bool _init_window();
 	bool _init_audio();
-	bool _init_python_scripting();
+	bool _init_scripting();
 
 	//VULKAN INIT
 	bool _init_vulkan();
@@ -47,7 +47,16 @@ private:
 
     //std::shared_ptr<Audio> _audio;
 	std::shared_ptr<Vulkan> _vulkan;
-	std::shared_ptr<ScriptSystem> _python_scripting;
+	std::shared_ptr<ScriptSystem> _script_system;
+
+
+
+
+
+
+	//tests
+	void test_scripts();
+
 };
 
 #endif // ENGINE_H
