@@ -8,4 +8,4 @@ class VScript(ScriptInstance):
         self.log("init2")
 
     def update(self, o):
-        self.log("update2")
+        1+1#self.log("update2")

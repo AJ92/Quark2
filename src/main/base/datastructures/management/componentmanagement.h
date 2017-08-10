@@ -3,7 +3,7 @@
 
 #include <algorithm>
 #include <memory>
-#include <map>
+#include <unordered_map>
 #include <vector>
 
 #include "base/datastructures/components/component.h"
@@ -20,7 +20,7 @@ public:
 	std::vector<std::shared_ptr<Component> > getAllComponentsByType(Component::Type type);
 
 private:
-	std::map<Component::Type, std::vector<std::shared_ptr<Component> > > _type_component_map;
+	std::unordered_map<Component::Type, std::vector<std::shared_ptr<Component> > > _type_component_map;
 };
 
 #endif // COMPONENTMANAGEMENT_H

@@ -18,6 +18,13 @@ ScriptSystem::~ScriptSystem()
     _deint_python();
 }
 
+void ScriptSystem::init() {
+	std::vector<std::shared_ptr<Component> > comps = _component_management->getAllComponentsByType(Component::Script);
+	for (auto const& comp : comps) {
+		comp->init();
+	}
+}
+
 void ScriptSystem::update() {
 	std::vector<std::shared_ptr<Component> > comps = _component_management->getAllComponentsByType(Component::Script);
 	for (auto const& comp : comps) {
@@ -55,7 +62,7 @@ bool ScriptSystem::_deinit() {
 
 bool ScriptSystem::_init_python() {
 
-	Py_SetProgramName("Vulkan0");  /* optional but recommended */
+	Py_SetProgramName("Vulkan0Script");  /* optional but recommended */
 	Py_Initialize();
 	PyRun_SimpleString("from time import time,ctime\n"
 		"print 'Today is',ctime(time())\n");

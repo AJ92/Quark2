@@ -1,9 +1,6 @@
 #include "engine.h"
 #include <iostream>
 
-const std::vector<const char*> validationLayers = {
-	"VK_LAYER_LUNARG_standard_validation"
-};
 
 Engine::Engine() :
 	_window(0)
@@ -103,11 +100,17 @@ bool Engine::_post_init() {
 }
 
 bool Engine::_main_loop() {
+	_script_system->init();
+
+	_init_diagnostics();
+
 	while (!glfwWindowShouldClose(_window)) {
 		glfwPollEvents();
 		_script_system->update();
 		_vulkan->updateUniformBuffer();
 		_vulkan->drawFrame();
+
+		_update_diagnostics();
 	}
 	_vulkan->cleanUp();
 	glfwDestroyWindow(_window);
@@ -117,12 +120,32 @@ bool Engine::_main_loop() {
 
 
 
+void Engine::_init_diagnostics() {
+	_current_frame = 0;
+	_cum_frame_count = 0;
+	_max_frame_count = 60;
+	_cum_frame_time_elapsed = std::chrono::duration<double>(0.0);
+	_frame_start = std::chrono::high_resolution_clock::now();
+}
 
+void Engine::_update_diagnostics() {
+	_frame_end = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> elapsed_seconds = _frame_end - _frame_start;
+	_cum_frame_time_elapsed += elapsed_seconds;
+	_frame_start = _frame_end;
 
+	_cum_frame_count += 1;
 
+	if (_cum_frame_count > _max_frame_count) {
+		//print fps
 
+		std::cout << _cum_frame_time_elapsed.count() / _max_frame_count << std::endl;
+		std::cout << 1.0 / _cum_frame_time_elapsed.count() * 60.0 << std::endl;
 
-
+		_cum_frame_time_elapsed = std::chrono::duration<double>(0.0);
+		_cum_frame_count = 0;
+	}
+}
 
 
 
@@ -142,4 +165,11 @@ void Engine::test_scripts() {
 	//add them to component management
 	_component_management->addComponent(script_1);
 	_component_management->addComponent(script_2);
+
+	
+	for (int i = 0; i < 1000; i++) {
+		_component_management->addComponent(std::make_shared<Script>(script_file1));
+	}
+	
+	
 }

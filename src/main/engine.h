@@ -7,6 +7,7 @@
 #include "base/vulkan/vulkan.h"
 #include "base/systems/scriptsystem.h"
 
+#include <chrono>
 #include <memory>
 //#include <audio.h>
 
@@ -51,6 +52,15 @@ private:
 
 
 
+	//diagnostics... probably better to put it in an extra system!
+	void _init_diagnostics();
+	void _update_diagnostics();
+
+	std::chrono::time_point<std::chrono::high_resolution_clock> _frame_start, _frame_end;
+	std::chrono::duration<double> _cum_frame_time_elapsed;
+	int _cum_frame_count;
+	int _max_frame_count;
+	int _current_frame;
 
 
 

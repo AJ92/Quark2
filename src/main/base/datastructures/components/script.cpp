@@ -77,13 +77,23 @@ Script::~Script()
 }
 
 void Script::update() {
+	try {
 	if(_py_update_f.ptr() != nullptr && _vscript.ptr() != nullptr)
 		_py_update_f(_vscript); //call update in python object...
+	}
+	catch (const std::runtime_error& e) {
+		std::cout << e.what() << std::endl;
+	}
 }
 
 void Script::init() {
-	if (_py_init_f.ptr() != nullptr && _vscript.ptr() != nullptr)
-	_py_init_f(); //call init in python object...
+	try {
+		if (_py_init_f.ptr() != nullptr && _vscript.ptr() != nullptr)
+			_py_init_f(); //call init in python object...
+	}
+	catch (const std::runtime_error& e) {
+		std::cout << e.what() << std::endl;
+	}
 }
 
 int Script::scriptSize(std::string script) {

@@ -21,6 +21,8 @@ public:
 	ScriptSystem(std::shared_ptr<ComponentManagement> cm);
 	~ScriptSystem();
 
+	//initialize all script objects
+	virtual void init();
 	//update all script objects...
 	virtual void update();
 	
