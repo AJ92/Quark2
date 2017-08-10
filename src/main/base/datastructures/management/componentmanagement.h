@@ -8,6 +8,12 @@
 
 #include "base/datastructures/components/component.h"
 
+struct HashEnumCast {
+    size_t operator()(Component::Type const& t) const {
+        return (int) t;
+    }
+};
+
 class ComponentManagement
 {
 public:
@@ -20,7 +26,7 @@ public:
 	std::vector<std::shared_ptr<Component> > getAllComponentsByType(Component::Type type);
 
 private:
-	std::unordered_map<Component::Type, std::vector<std::shared_ptr<Component> > > _type_component_map;
+	std::unordered_map<Component::Type, std::vector<std::shared_ptr<Component> >, HashEnumCast > _type_component_map;
 };
 
 #endif // COMPONENTMANAGEMENT_H
