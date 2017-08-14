@@ -35,4 +35,4 @@ private:
 	bool _deint_python();
 };
 
-#endif // PYTHONSCRIPTING_H
+#endif // SCRIPTSYSTEM_H
