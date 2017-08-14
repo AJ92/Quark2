@@ -14,6 +14,7 @@ Engine::~Engine() {
 
 void Engine::run() {
 	_pre_init();
+	_init_allcoators();
 	_init_component_management();
 	_init_window();
 	_init_audio();
@@ -44,6 +45,13 @@ bool Engine::_pre_init() {
 	_debug = true;
 #endif
 
+	return true;
+}
+
+bool Engine::_init_allcoators() {
+	size_t mem_size = 1024 * 1024 * 1024;
+	void * mem = malloc(mem_size);
+	_allocator = std::make_shared<LinearAllocator>(mem_size, mem);
 	return true;
 }
 
@@ -159,16 +167,17 @@ void Engine::test_scripts() {
 	std::string script_file1 = "resources/scripts/script1.py";
 	std::string script_file2 = "resources/scripts/script2.py";
 
-	std::shared_ptr<Script> script_1 = std::make_shared<Script>(script_file1);
-	std::shared_ptr<Script> script_2 = std::make_shared<Script>(script_file2);
+	//std::shared_ptr<Script> script_1 = std::make_shared<Script>(script_file1);
+	//std::shared_ptr<Script> script_2 = std::make_shared<Script>(script_file2);
 
 	//add them to component management
-	_component_management->addComponent(script_1);
-	_component_management->addComponent(script_2);
+	//_component_management->addComponent(script_1);
+	//_component_management->addComponent(script_2);
 
 	
-	for (int i = 0; i < 1000; i++) {
-		_component_management->addComponent(std::make_shared<Script>(script_file1));
+	for (int i = 0; i < 600000; i++) {
+		Script * s = allocator::allocateNew<Script>(*_allocator.get());
+		_component_management->addComponent(std::shared_ptr<Script>(s));
 	}
 	
 	

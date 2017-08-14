@@ -9,7 +9,7 @@ public:
 	LinearAllocator(size_t size, void* start);
 	~LinearAllocator();
 
-	void* allocate(size_t size, u8 alignment) override;
+	void* allocate(size_t size, size_t alignment) override;
 		
 	void deallocate(void* p) override;
 

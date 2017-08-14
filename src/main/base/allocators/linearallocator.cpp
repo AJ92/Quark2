@@ -3,7 +3,7 @@
 LinearAllocator::LinearAllocator(size_t size, void* start) 
 	: Allocator(size, start), _current_pos(start)
 {
-	ASSERT(size > 0);
+	assert(size > 0);
 }
 
 LinearAllocator::~LinearAllocator()
@@ -11,16 +11,16 @@ LinearAllocator::~LinearAllocator()
 	_current_pos   = nullptr;
 }
 
-void* LinearAllocator::allocate(size_t size, u8 alignment)
+void* LinearAllocator::allocate(size_t size, size_t alignment)
 {
-	ASSERT(size != 0);
+	assert(size != 0);
 
-	u8 adjustment =  pointer_math::alignForwardAdjustment(_current_pos, alignment);
+	size_t adjustment =  p_math::alignForwardAdjustment(_current_pos, alignment);
 
 	if(_used_memory + adjustment + size > _size)
 		return nullptr;
 
-	uptr aligned_address = (uptr)_current_pos + adjustment;
+	uintptr_t aligned_address = (uintptr_t)_current_pos + adjustment;
 
 	_current_pos = (void*)(aligned_address + size);
 
@@ -32,7 +32,7 @@ void* LinearAllocator::allocate(size_t size, u8 alignment)
 
 void LinearAllocator::deallocate(void* p)
 {
-	ASSERT( false && "Use clear() instead" );
+	assert( false && "Use clear() instead" );
 }
 
 void LinearAllocator::clear()

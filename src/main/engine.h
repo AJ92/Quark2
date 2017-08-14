@@ -6,6 +6,8 @@
 
 #include "base/vulkan/vulkan.h"
 #include "base/systems/scriptsystem.h"
+#include "base/allocators/allocator.h"
+#include "base/allocators/linearallocator.h"
 
 #include <chrono>
 #include <memory>
@@ -26,6 +28,7 @@ private:
 	bool _debug;
 
 	bool _pre_init();
+	bool _init_allcoators();
 	bool _init_component_management();
 	bool _init_window();
 	bool _init_audio();
@@ -67,6 +70,8 @@ private:
 	//tests
 	void test_scripts();
 
+	//test custom mem allocator
+	std::shared_ptr<LinearAllocator> _allocator;
 };
 
 #endif // ENGINE_H

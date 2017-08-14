@@ -78,9 +78,9 @@ Script::~Script()
 
 void Script::update() {
 	try {
-	if(_py_update_f.ptr() != nullptr && _vscript.ptr() != nullptr)
-		_py_update_f(_vscript); //call update in python object...
-	}
+		if(_py_update_f.ptr() != nullptr && _vscript.ptr() != nullptr)
+			_py_update_f(_vscript); //call update in python object...
+		}
 	catch (const std::runtime_error& e) {
 		std::cout << e.what() << std::endl;
 	}

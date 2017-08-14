@@ -1,6 +1,8 @@
 #ifndef ALLOCATOR_H
 #define ALLOCATOR_H
 
+#include <cassert>
+
 class Allocator
 {
 public:
@@ -15,13 +17,13 @@ public:
 
 	virtual ~Allocator()
 	{
-		ASSERT(_num_allocations == 0 && _used_memory == 0);
+		assert(_num_allocations == 0 && _used_memory == 0);
 
 		_start = nullptr;
 		_size   = 0;
 	}
 
-	virtual void* allocate(size_t size, u8 alignment = 4) = 0;
+	virtual void* allocate(size_t size, size_t alignment = 4) = 0;
 
 	virtual void deallocate(void* p) = 0;
 
@@ -55,25 +57,29 @@ protected:
 
 namespace allocator
 {
-	template  T* allocateNew(Allocator& allocator)
+	template <class T>
+	T * allocateNew(Allocator& allocator)
 	{
-		return new (allocator.allocate(sizeof(T), __alignof(T))) T;
+		return new (allocator.allocate(sizeof(T), alignof(T))) T;
 	}
 
-	template  T* allocateNew(Allocator& allocator, const T& t)
+	template<class T>
+	T * allocateNew(Allocator& allocator, const T& t)
 	{
-		return new (allocator.allocate(sizeof(T), __alignof(T))) T(t);
+		return new (allocator.allocate(sizeof(T), alignof(T))) T(t);
 	}
 
-	template void deallocateDelete(Allocator& allocator, T& object)
+	template <class T>
+	void deallocateDelete(Allocator& allocator, T& object)
 	{
 		object.~T();
 		allocator.deallocate(&object);
 	}
 
-	template T* allocateArray(Allocator& allocator, size_t length)
+	template <class T>
+	T * allocateArray(Allocator& allocator, size_t length)
 	{
-		ASSERT(length != 0);
+		assert(length != 0);
 
 		u8 headerSize = sizeof(size_t)/sizeof(T);
 
@@ -81,7 +87,7 @@ namespace allocator
 			headerSize += 1;
 
 		//Allocate extra space to store array length in the bytes before the array
-		T* p = ( (T*) allocator.allocate(sizeof(T)*(length + headerSize), __alignof(T)) ) + headerSize;
+		T* p = ( (T*) allocator.allocate(sizeof(T)*(length + headerSize), alignof(T)) ) + headerSize;
 
 		*( ((size_t*)p) - 1 ) = length;
 
@@ -91,9 +97,10 @@ namespace allocator
 		return p;
 	}
 
-	template void deallocateArray(Allocator& allocator, T* array)
+	template <class T>
+	void deallocateArray(Allocator& allocator, T* array)
 	{
-		ASSERT(array != nullptr);
+		assert(array != nullptr);
 
 		size_t length = *( ((size_t*)array) - 1 );
 
@@ -101,7 +108,7 @@ namespace allocator
 			array.~T();
 
 		//Calculate how much extra memory was allocated to store the length before the array
-		u8 headerSize = sizeof(size_t)/sizeof(T);
+		size_t headerSize = sizeof(size_t)/sizeof(T);
 
 		if(sizeof(size_t)%sizeof(T) > 0)
 			headerSize += 1;
@@ -112,14 +119,14 @@ namespace allocator
 
 namespace p_math
 {
-    inline void* alignForward(void* address, u8 alignment)
+    inline void* alignForward(void* address, size_t alignment)
     {
-        return (void*)( ( reinterpret_cast(address) + static_cast(alignment-1) ) & static_cast(~(alignment-1)) );
+        return (void*)( ( reinterpret_cast<char>(address) + static_cast<char>(alignment-1) ) & static_cast<char>(~(alignment-1)) );
     }
 
-    inline u8 alignForwardAdjustment(const void* address, u8 alignment)
+    inline size_t alignForwardAdjustment(const void* address, size_t alignment)
     {
-        u8 adjustment =  alignment - ( reinterpret_cast(address) & static_cast(alignment-1) );
+		size_t adjustment =  alignment - ( reinterpret_cast<char>(address) & static_cast<char>(alignment-1) );
         
         if(adjustment == alignment)
             return 0; //already aligned
@@ -127,11 +134,11 @@ namespace p_math
         return adjustment;
     }
 
-    inline u8 alignForwardAdjustmentWithHeader(const void* address, u8 alignment, u8 headerSize)
+    inline size_t alignForwardAdjustmentWithHeader(const void* address, size_t alignment, size_t headerSize)
     {
-        u8 adjustment =  alignForwardAdjustment(address, alignment);
+		size_t adjustment =  alignForwardAdjustment(address, alignment);
         
-        u8 neededSpace = headerSize;
+		size_t neededSpace = headerSize;
         
         if(adjustment < neededSpace)
         {
