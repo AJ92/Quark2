@@ -1,6 +1,8 @@
 #ifndef ALLOCATOR_H
 #define ALLOCATOR_H
 
+#include <cstddef>
+#include <cstdint>
 #include <cassert>
 
 class Allocator
@@ -81,7 +83,7 @@ namespace allocator
 	{
 		assert(length != 0);
 
-		u8 headerSize = sizeof(size_t)/sizeof(T);
+		size_t headerSize = sizeof(size_t)/sizeof(T);
 
 		if(sizeof(size_t)%sizeof(T) > 0)
 			headerSize += 1;
@@ -121,12 +123,12 @@ namespace p_math
 {
     inline void* alignForward(void* address, size_t alignment)
     {
-        return (void*)( ( reinterpret_cast<char>(address) + static_cast<char>(alignment-1) ) & static_cast<char>(~(alignment-1)) );
+        return (void*)( ( reinterpret_cast<uintptr_t>(address) + static_cast<size_t>(alignment-1) ) & static_cast<uintptr_t>(~(alignment-1)) );
     }
 
     inline size_t alignForwardAdjustment(const void* address, size_t alignment)
     {
-		size_t adjustment =  alignment - ( reinterpret_cast<char>(address) & static_cast<char>(alignment-1) );
+		size_t adjustment =  alignment - ( reinterpret_cast<uintptr_t>(address) & static_cast<size_t>(alignment-1) );
         
         if(adjustment == alignment)
             return 0; //already aligned

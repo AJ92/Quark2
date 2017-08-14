@@ -175,7 +175,7 @@ void Engine::test_scripts() {
 	//_component_management->addComponent(script_2);
 
 	
-	for (int i = 0; i < 600000; i++) {
+	for (int i = 0; i < 1000; i++) {
 		Script * s = allocator::allocateNew<Script>(*_allocator.get());
 		_component_management->addComponent(std::shared_ptr<Script>(s));
 	}
