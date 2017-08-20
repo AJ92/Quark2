@@ -1,7 +1,6 @@
 #include "engine.h"
 #include <iostream>
 
-
 Engine::Engine() :
 	_window(0)
 {
@@ -49,9 +48,6 @@ bool Engine::_pre_init() {
 }
 
 bool Engine::_init_allcoators() {
-	size_t mem_size = 1024 * 1024 * 1024;
-	void * mem = malloc(mem_size);
-	_allocator = std::make_shared<LinearAllocator>(mem_size, mem);
 	return true;
 }
 
@@ -102,6 +98,8 @@ bool Engine::_post_init() {
 	std::string filename2 = "C:/Code/VS/engine-main/engine/build/Debug/test3.flac";
 	//_audio->processEvent(AudioEventType::start, &_audio->getSound(filename2), true);
 
+	test_p_math();
+	test_allocs();
 	test_scripts();
 
 	return true;
@@ -109,7 +107,6 @@ bool Engine::_post_init() {
 
 bool Engine::_main_loop() {
 	_script_system->init();
-
 	_init_diagnostics();
 
 	while (!glfwWindowShouldClose(_window)) {
@@ -147,8 +144,8 @@ void Engine::_update_diagnostics() {
 	if (_cum_frame_count > _max_frame_count) {
 		//print fps
 
-		std::cout << _cum_frame_time_elapsed.count() / _max_frame_count << std::endl;
-		std::cout << 1.0 / _cum_frame_time_elapsed.count() * 60.0 << std::endl;
+		std::cout << "mspf = " << _cum_frame_time_elapsed.count() / _max_frame_count <<
+		"  fps = " << 1.0 / _cum_frame_time_elapsed.count() * 60.0 << std::endl;
 
 		_cum_frame_time_elapsed = std::chrono::duration<double>(0.0);
 		_cum_frame_count = 0;
@@ -167,18 +164,63 @@ void Engine::test_scripts() {
 	std::string script_file1 = "resources/scripts/script1.py";
 	std::string script_file2 = "resources/scripts/script2.py";
 
-	//std::shared_ptr<Script> script_1 = std::make_shared<Script>(script_file1);
-	//std::shared_ptr<Script> script_2 = std::make_shared<Script>(script_file2);
+	std::shared_ptr<Script> script_1 = std::make_shared<Script>(script_file1);
+	std::shared_ptr<Script> script_2 = std::make_shared<Script>(script_file2);
 
 	//add them to component management
-	//_component_management->addComponent(script_1);
-	//_component_management->addComponent(script_2);
+	_component_management->addComponent(script_1);
+	_component_management->addComponent(script_2);
 
-	
+
+
+
+
+	//alloc and free 1000 times...
 	for (int i = 0; i < 1000; i++) {
-		Script * s = allocator::allocateNew<Script>(*_allocator.get());
+		Script * s = new Script();
+		//_component_management->addComponent(std::shared_ptr<Script>(s));
+		delete s;
+	}
+
+	std::chrono::time_point<std::chrono::high_resolution_clock> time_start, time_end;
+	
+	time_start = std::chrono::high_resolution_clock::now();
+	for (int i = 0; i < 1000; i++) {
+		Script * s = new Script();
 		_component_management->addComponent(std::shared_ptr<Script>(s));
 	}
+	time_end = std::chrono::high_resolution_clock::now();
+
+	std::chrono::duration<double> elapsed_time = time_end - time_start;
 	
-	
+	std::cout << "1M allocs duration = " << elapsed_time.count() << std::endl;
+}
+
+void Engine::test_p_math(){
+	/*
+	//testing pointer alignment:
+	size_t mem_size_1 = 1024 + 1;
+	void * mem_p1 = malloc(mem_size_1);
+
+	std::cout <<
+		"addr: " <<
+		(uintptr_t)mem_p1 <<
+		" >> " <<
+		(uintptr_t)p_math::alignForward(mem_p1, 64) <<
+		std::endl;	
+
+	free(mem_p1);
+	*/
+}
+
+void Engine::test_allocs(){
+	/*
+	std::string script_file1 = "resources/scripts/script1.py";
+	Script temp_script(script_file1);	
+	for (int i = 0; i < 10; i++) {
+		Script * s = allocator::allocateNew<Script>(*_allocator.get(), temp_script);
+		_component_management->addComponent(std::shared_ptr<Script>(s));
+	}	
+	*/
+
 }

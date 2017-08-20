@@ -47,6 +47,7 @@ Script::Script() :
 {
 	_script_size = 0;
 
+	/*
 	bool init_done = _init();
 
 	if (init_done) {
@@ -55,6 +56,7 @@ Script::Script() :
 	else {
 		std::cout << "Script initialization failed" << std::endl;
 	}
+	*/
 }
 
 Script::Script(std::string & scriptFile) :
@@ -64,10 +66,24 @@ Script::Script(std::string & scriptFile) :
 	bool init_done = _init();
 
 	if (init_done) {
-		std::cout << "Script " << scriptFile << " initialized" << std::endl;
+		std::cout << "Script " << _script_file << " initialized" << std::endl;
 	}
 	else {
-		std::cout << "Script " << scriptFile << " initialization failed" << std::endl;
+		std::cout << "Script " << _script_file << " initialization failed" << std::endl;
+	}
+}
+
+Script::Script(const Script &script):
+	Component(Type::Script),
+	_script_file(script._script_file)
+{
+	bool init_done = _init();
+	
+	if (init_done) {
+		std::cout << "Script " << _script_file << " initialized" << std::endl;
+	}
+	else {
+		std::cout << "Script " << _script_file << " initialization failed" << std::endl;
 	}
 }
 

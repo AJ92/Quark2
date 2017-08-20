@@ -6,8 +6,6 @@
 
 #include "base/vulkan/vulkan.h"
 #include "base/systems/scriptsystem.h"
-#include "base/allocators/allocator.h"
-#include "base/allocators/linearallocator.h"
 
 #include <chrono>
 #include <memory>
@@ -69,9 +67,8 @@ private:
 
 	//tests
 	void test_scripts();
-
-	//test custom mem allocator
-	std::shared_ptr<LinearAllocator> _allocator;
+	void test_p_math();
+	void test_allocs();
 };
 
 #endif // ENGINE_H

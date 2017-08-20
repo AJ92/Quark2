@@ -15,6 +15,7 @@ class Script: public Component
 public:
 	Script();
 	Script(std::string & scriptFile);
+	Script(const Script &script);
 	~Script();
 
 	virtual void init();

@@ -1,5 +1,8 @@
 //#include <vld.h> //check for mem leaks
 
+//#include "base/mem/memmanagement.h"
+#include "base/mem/allocator/ltalloc.cc"
+
 #include "engine.h"
 
 #define GLM_FORCE_RADIANS
@@ -26,6 +29,7 @@
        OutputDebugStringW( os_.str().c_str() );  \
     }
 #endif
+
 
 
 
@@ -57,6 +61,8 @@ int main(void)
 	}
 
 	std::cout.rdbuf(coutbuf); //reset to standard output again
+
+	//memuse();
 
 	if (!success) {
 		return EXIT_FAILURE;
