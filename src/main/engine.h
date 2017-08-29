@@ -60,15 +60,12 @@ private:
 	std::chrono::time_point<std::chrono::high_resolution_clock> _frame_start, _frame_end;
 	std::chrono::duration<double> _cum_frame_time_elapsed;
 	int _cum_frame_count;
-	int _max_frame_count;
 	int _current_frame;
 
 
 
 	//tests
 	void test_scripts();
-	void test_p_math();
-	void test_allocs();
 };
 
 #endif // ENGINE_H

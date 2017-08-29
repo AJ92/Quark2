@@ -10,7 +10,7 @@ class VScript(ScriptInstance):
         self.log("init1")
 
     def update(self, o):
-        self.primes(5);
+        self.primes(3);
 
     def primes(self, n):
         if n==2: return [2]

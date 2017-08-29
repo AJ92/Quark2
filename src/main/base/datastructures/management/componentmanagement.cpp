@@ -43,7 +43,7 @@ void ComponentManagement::removeComponent(std::shared_ptr<Component> comp) {
 	}
 }
 
-std::vector<std::shared_ptr<Component> > ComponentManagement::getAllComponentsByType(
+std::vector<std::shared_ptr<Component> > & ComponentManagement::getAllComponentsByType(
 	Component::Type type)
 {
 	std::unordered_map<Component::Type, std::vector<std::shared_ptr<Component> >, HashEnumCast >::iterator it_map;
@@ -51,7 +51,7 @@ std::vector<std::shared_ptr<Component> > ComponentManagement::getAllComponentsBy
 
 	if (it_map == _type_component_map.end()) {
 
-		return std::vector<std::shared_ptr<Component> >();
+		return _empty_comp_vec;
 	}
 
 	return it_map->second;

@@ -23,9 +23,10 @@ public:
 	void addComponent(std::shared_ptr<Component> comp);
 	void removeComponent(std::shared_ptr<Component> comp);
 
-	std::vector<std::shared_ptr<Component> > getAllComponentsByType(Component::Type type);
+	std::vector<std::shared_ptr<Component> > & getAllComponentsByType(Component::Type type);
 
 private:
+	std::vector<std::shared_ptr<Component> > _empty_comp_vec;
 	std::unordered_map<Component::Type, std::vector<std::shared_ptr<Component> >, HashEnumCast > _type_component_map;
 };
 

@@ -14,12 +14,13 @@ class Script: public Component
 {
 public:
 	Script();
-	Script(std::string & scriptFile);
 	Script(const Script &script);
 	~Script();
 
 	virtual void init();
 	virtual void update();
+
+	void setScript(std::string script);
 
 	int scriptSize(std::string script);
 	bool hasScriptChanged();

@@ -10,6 +10,7 @@ public:
 		GameObject,
 		Transfomation,
 		Renderer,
+		Geometry,
 		Material,
 		Shader,
 		Texture,

@@ -45,46 +45,14 @@ PYBIND11_MODULE(Vulkan0Script, m)
 Script::Script() :
 	Component(Type::Script)
 {
-	_script_size = 0;
 
-	/*
-	bool init_done = _init();
-
-	if (init_done) {
-		std::cout << "Script initialized" << std::endl;
-	}
-	else {
-		std::cout << "Script initialization failed" << std::endl;
-	}
-	*/
-}
-
-Script::Script(std::string & scriptFile) :
-	Component(Type::Script),
-	_script_file(scriptFile)
-{
-	bool init_done = _init();
-
-	if (init_done) {
-		std::cout << "Script " << _script_file << " initialized" << std::endl;
-	}
-	else {
-		std::cout << "Script " << _script_file << " initialization failed" << std::endl;
-	}
 }
 
 Script::Script(const Script &script):
 	Component(Type::Script),
 	_script_file(script._script_file)
 {
-	bool init_done = _init();
-	
-	if (init_done) {
-		std::cout << "Script " << _script_file << " initialized" << std::endl;
-	}
-	else {
-		std::cout << "Script " << _script_file << " initialization failed" << std::endl;
-	}
+
 }
 
 Script::~Script()
@@ -110,6 +78,11 @@ void Script::init() {
 	catch (const std::runtime_error& e) {
 		std::cout << e.what() << std::endl;
 	}
+}
+
+void Script::setScript(std::string script){
+	_script_file = script;
+	_init();
 }
 
 int Script::scriptSize(std::string script) {
