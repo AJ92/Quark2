@@ -1532,7 +1532,7 @@ bool Vulkan::_create_command_buffers() {
 		VkBuffer vertexBuffers[] = { _vertex_buffer };
 		VkDeviceSize offsets[] = { 0 };
 		vkCmdBindVertexBuffers(_command_buffers[i], 0, 1, vertexBuffers, offsets);
-		vkCmdBindIndexBuffer(_command_buffers[i], _index_buffer, 0, VK_INDEX_TYPE_UINT16);
+		vkCmdBindIndexBuffer(_command_buffers[i], _index_buffer, 0, VK_INDEX_TYPE_UINT32);
 		vkCmdBindDescriptorSets(
 			_command_buffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS,
 			_pipeline_layout, 0, 1, &_descriptor_set, 0, nullptr);

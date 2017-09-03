@@ -8,7 +8,7 @@ public:
 
 	enum Type {
 		GameObject,
-		Transfomation,
+		Transformation,
 		Renderer,
 		Geometry,
 		Material,

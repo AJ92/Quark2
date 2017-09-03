@@ -1,9 +1,6 @@
 #ifndef VULKAN_H
 #define VULKAN_H
 
-
-//#include <audio.h>
-
 #define NOMINMAX
 #define GLFW_INCLUDE_VULKAN
 #include <glfw3.h>
@@ -279,9 +276,8 @@ private:
 		{ {  0.5f,  0.5f, -0.5f }, { 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } },
 		{ { -0.5f,  0.5f, -0.5f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }
 	};
-
-	//16 bit cause we have less than 65535 unique vertices
-	const std::vector<uint16_t> _indices = {
+	
+	const std::vector<uint32_t> _indices = {
 		0, 1, 2, 2, 3, 0,
 		4, 5, 6, 6, 7, 4
 	};
