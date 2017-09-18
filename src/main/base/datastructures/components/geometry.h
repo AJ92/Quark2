@@ -15,7 +15,7 @@ public:
 	virtual void update();
 
 	std::vector<Vertex> & getVertexVector();
-	std::vector<Vertex> & getIndexVector();
+	std::vector<uint32_t> & getIndexVector();
 
 private:
 	std::vector<Vertex> _vertices;

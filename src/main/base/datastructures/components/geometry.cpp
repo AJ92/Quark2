@@ -23,6 +23,6 @@ void Geometry::init() {
 std::vector<Vertex> & Geometry::getVertexVector(){
 	return _vertices;
 }
-std::vector<Vertex> & Geometry::getIndexVector(){
+std::vector<uint32_t> & Geometry::getIndexVector(){
 	return _indices;
 }

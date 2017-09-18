@@ -4,13 +4,13 @@
 
 RenderSystem::RenderSystem()
 {
-	_init();
+	//_init();
 }
 
 RenderSystem::RenderSystem(std::shared_ptr<ComponentManagement> cm) :
 	_component_management(cm)
 {
-	_init();
+	//_init();
 }
 
 RenderSystem::~RenderSystem()
