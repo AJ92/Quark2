@@ -4,6 +4,7 @@
 #include "scriptinstance.h"
 #include "pyscriptinstance.h"
 
+
 //deprecated
 /*
 PYBIND11_PLUGIN(Vulkan0Script)
@@ -22,24 +23,26 @@ PYBIND11_PLUGIN(Vulkan0Script)
 }
 */
 
+//namespace plugin_script {
+	//PYBIND11_MODULE(Vulkan0Script, m)
+	PYBIND11_EMBEDDED_MODULE(Vulkan0Script, m)
+	{
+		//if (!_py_module_initialized) {
+			m.doc() = "Python based Vulkan0-Scripting";
 
-PYBIND11_MODULE(Vulkan0Script, m)
-{
-	if (!_py_module_initialized) {
-		m.doc() = "Python based Vulkan0-Scripting";
+			py::class_<Script>(m, "Script")
+				;
 
-		py::class_<Script>(m, "Script")
-			;
+			py::class_<ScriptInstance, PyScriptInstance>(m, "ScriptInstance")
+				.def(py::init<Script*>()) // constructor
+				.def("test", &ScriptInstance::test) //member function
+				.def("log", &ScriptInstance::log)
+				;
 
-		py::class_<ScriptInstance, PyScriptInstance>(m, "ScriptInstance")
-			.def(py::init<Script*>()) // constructor
-			.def("test", &ScriptInstance::test) //member function
-			.def("log", &ScriptInstance::log)
-			;
-
-		_py_module_initialized = true;
+			_py_module_initialized = true;
+		//}
 	}
-}
+//}
 
 
 Script::Script() :
@@ -118,12 +121,13 @@ bool Script::_init() {
 
 	try
 	{
-		pybind11_init_wrapper();
-	
-		_main = py::module::import("__main__");
-		_globals = _main.attr("__dict__");
-		_module = _import("vscript", _script_file, _globals);
+		//pybind11_init_wrapper();
+		
+		//auto py_module = py::module::import(_script_file.c_str());
+		_module = py::module::import("script1");
 		_module_vscript = _module.attr("VScript");
+
+
 		_vscript = _module_vscript(this);
 
 		_py_init_f = _vscript.attr("init");
@@ -131,8 +135,9 @@ bool Script::_init() {
 		_py_update_f = _vscript.attr("update");
 		
 	}
-	catch (const py::error_already_set& e)
+	catch (const std::runtime_error& e)
 	{
+
 		std::cerr << ">>> Error! Uncaught exception:\n";
 		std::cerr << e.what() << std::endl;
 		PyErr_Print();
@@ -154,19 +159,4 @@ bool Script::_reinit() {
 	std::streampos pos = in.tellg();
 
 	return true;
-}
-
-py::object Script::_import(const std::string& module, const std::string& path, py::object& globals)
-{
-	py::dict locals;
-	locals["module_name"] = py::cast(module);
-	locals["path"] = py::cast(path);
-
-	py::eval<py::eval_statements>(
-		"import imp\n"
-		"new_module = imp.load_module(module_name, open(path), path, ('py', 'U', imp.PY_SOURCE))\n",
-		globals,
-		locals);
-
-	return locals["new_module"];
 }

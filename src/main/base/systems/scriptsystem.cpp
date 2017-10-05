@@ -61,11 +61,27 @@ bool ScriptSystem::_deinit() {
 }
 
 bool ScriptSystem::_init_python() {
+	//windows
+	//Py_SetProgramName(L"Vulkan0Script"); /* optional but recommended */
+	//linux 
+	//Py_SetProgramName("Vulkan0Script");  /* optional but recommended */
 
-	Py_SetProgramName("Vulkan0Script");  /* optional but recommended */
-	Py_Initialize();
-	PyRun_SimpleString("from time import time,ctime\n"
-		"print 'Today is',ctime(time())\n");
+
+	/*Py_Initialize();
+	PyRun_SimpleString(
+		"import sys\n"
+		"print (sys.version)\n"
+	);
+	*/
+
+	py::dict locals;
+	locals["resource_path"] = py::cast("/home/aj/Code/Quark2/bin/resources/scripts");
+	py::exec(
+		"import sys\n"
+		"sys.path.append(resource_path)\n",
+		py::globals(),
+		locals
+	);
 
 	return true;
 }

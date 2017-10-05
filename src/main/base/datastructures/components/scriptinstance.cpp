@@ -8,7 +8,7 @@ ScriptInstance::ScriptInstance(Script* script)
 }
 
 void ScriptInstance::test() {
-	//std::cout << "Script::test() called!" << std::endl;
+	std::cout << "Script::test() called!" << std::endl;
 }
 
 void ScriptInstance::log(std::string str) {

@@ -1,7 +1,13 @@
+
+
+
+
 //#include <vld.h> //check for mem leaks
 
 //#include "base/mem/memmanagement.h"
+#if defined(_DEBUG)
 #include "base/mem/allocator/ltalloc.cc"
+#endif
 
 #include "engine.h"
 

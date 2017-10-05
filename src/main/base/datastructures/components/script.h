@@ -3,6 +3,7 @@
 
 #include "base/datastructures/components/component.h"
 #include <pybind11/pybind11.h>
+#include <pybind11/embed.h>
 #include <pybind11/eval.h>
 
 
@@ -44,6 +45,8 @@ private:
 
 	py::object _py_init_f;
 	py::object _py_update_f;
+
+	
 
 };
 

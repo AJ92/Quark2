@@ -8,6 +8,7 @@
 #include "base/datastructures/management/componentmanagement.h"
 //#include <Python.h>
 #include <pybind11/pybind11.h>
+#include <pybind11/embed.h>
 #include <pybind11/eval.h>
 #include <memory>
 #include <map>
@@ -33,6 +34,8 @@ private:
 	bool _deinit();
 	bool _init_python();
 	bool _deint_python();
+
+	py::scoped_interpreter guard{};
 };
 
 #endif // SCRIPTSYSTEM_H

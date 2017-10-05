@@ -63,15 +63,14 @@ file(COPY src/resources/ DESTINATION resources FILES_MATCHING PATTERN "*.py")
 ## dependencies ###############################################################
 ###############################################################################
 
-#Python
-find_package(PythonLibs REQUIRED)
-include_directories(${PYTHON_INCLUDE_DIRS})
-target_link_libraries(engine PUBLIC ${PYTHON_LIBRARIES})
-
-
-include_directories(engine PUBLIC thirdparty/pybind11/include)
-
 if (WIN32)
+    #Python
+    #find_package(PythonLibs REQUIRED)
+    set(PYTHON_INCLUDE_DIRS )
+    include_directories(${PYTHON_INCLUDE_DIRS})
+    target_link_libraries(engine PUBLIC ${PYTHON_LIBRARIES})
+    include_directories(engine PUBLIC thirdparty/pybind11/include)
+
     #opengl
     #target_link_libraries(engine PUBLIC opengl32)
 
@@ -110,6 +109,13 @@ endif (WIN32)
 
 
 if (UNIX)
+    #Python
+    #find_package(PythonLibs REQUIRED)
+    set(PYTHON_INCLUDE_DIRS /usr/include/python3.5)
+    set(PYTHON_LIBRARIES /usr/lib/x86_64-linux-gnu/libpython3.5m.so)
+    include_directories(${PYTHON_INCLUDE_DIRS})
+    target_link_libraries(engine PUBLIC ${PYTHON_LIBRARIES})
+    include_directories(engine PUBLIC thirdparty/pybind11/include)
 
     #Vulkan
     target_include_directories(engine PUBLIC thirdparty/vulkan/include)

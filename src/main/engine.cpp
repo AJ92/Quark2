@@ -100,7 +100,7 @@ bool Engine::_post_init() {
 
 	//test_p_math();
 	//test_allocs();
-	//test_scripts();
+	test_scripts();
 
 	return true;
 }
@@ -177,7 +177,7 @@ void Engine::test_scripts() {
 
 
 
-	for (int i = 0; i < 5000; i++) {
+	for (int i = 0; i < 3; i++) {
 		Script * s = new Script();
 		//_component_management->addComponent(std::shared_ptr<Script>(s));
 		delete s;
@@ -186,7 +186,7 @@ void Engine::test_scripts() {
 	std::chrono::time_point<std::chrono::high_resolution_clock> time_start, time_end;
 	
 	time_start = std::chrono::high_resolution_clock::now();
-	for (int i = 0; i < 5000; i++) {
+	for (int i = 0; i < 3; i++) {
 		Script * s = new Script();
 		s->setScript(script_file1);
 		_component_management->addComponent(std::shared_ptr<Script>(s));
