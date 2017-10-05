@@ -31,8 +31,8 @@ file(GLOB_RECURSE data          src/resources/*)
 
 ###############################################################################
 ## cmake auto moc fix
-list (APPEND sources "engine_automoc.cpp")
-set_property (SOURCE "engine_automoc.cpp" PROPERTY GENERATED TRUE)
+#list (APPEND sources "engine_automoc.cpp")
+#set_property (SOURCE "engine_automoc.cpp" PROPERTY GENERATED TRUE)
 
 
 ###############################################################################
