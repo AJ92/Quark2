@@ -1,8 +1,6 @@
 from Vulkan0Script import *
 
-
 class VScript(ScriptInstance):
-
     def __init__(self, script):
         ScriptInstance.__init__(self, script)
 
