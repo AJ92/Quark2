@@ -1,49 +1,22 @@
 #include "script.h"
 #include <iostream>
 #include <fstream>
-#include "scriptinstance.h"
-#include "pyscriptinstance.h"
 
-
-//deprecated
-/*
-PYBIND11_PLUGIN(Vulkan0Script)
-{
-	py::module m("Vulkan0Script", "Python based Vulkan0-Scripting");
-
-	py::class_<Script>(m, "Script")
-		;
-
-	py::class_<ScriptInstance, PyScriptInstance>(m, "ScriptInstance")
-		.def(py::init<Script*>()) // constructor
-		.def("test", &ScriptInstance::test) //member function
-		;
-
-	return m.ptr();
-}
-*/
-
-//namespace plugin_script {
-	//PYBIND11_MODULE(Vulkan0Script, m)
-	PYBIND11_EMBEDDED_MODULE(Vulkan0Script, m)
+namespace plugin_script {
+	PYBIND11_EMBEDDED_MODULE(Quark2, m)
 	{
-		//if (!_py_module_initialized) {
-			m.doc() = "Python based Vulkan0-Scripting";
+		if(!PY_MODULE_INITIALIZED) {
+			m.doc() = "Python scripting access to Quark2 engine";
 
-			py::class_<Script>(m, "Script")
-				;
+			auto script = py::class_<Script>(m, "VScript")
+				.def("log", &Script::log);
 
-			py::class_<ScriptInstance, PyScriptInstance>(m, "ScriptInstance")
-				.def(py::init<Script*>()) // constructor
-				.def("test", &ScriptInstance::test) //member function
-				.def("log", &ScriptInstance::log)
-				;
+			script.doc() = "Allows calling functions on the c++ side of Quark2";
 
-			_py_module_initialized = true;
-		//}
+			PY_MODULE_INITIALIZED = true;
+		}
 	}
-//}
-
+}
 
 Script::Script() :
 	Component(Type::Script)
@@ -53,7 +26,7 @@ Script::Script() :
 
 Script::Script(const Script &script):
 	Component(Type::Script),
-	_script_file(script._script_file)
+	mScriptFile(script.mScriptFile)
 {
 
 }
@@ -63,82 +36,91 @@ Script::~Script()
 
 }
 
-void Script::update() {
+void Script::init() {
 	try {
-		if(_py_update_f.ptr() != nullptr && _vscript.ptr() != nullptr)
-			_py_update_f(_vscript); //call update in python object...
+		if (mPyInitF.ptr() != nullptr && mVscript.ptr() != nullptr)
+			mPyInitF(); //call init in python object...
+	}
+	catch (const std::runtime_error& e) {
+		std::cout << e.what() << std::endl;
+	}
+}
+
+void Script::update() {
+
+	std::chrono::time_point<std::chrono::high_resolution_clock> time_start, time_end;
+
+	time_start = std::chrono::high_resolution_clock::now();
+
+	time_end = std::chrono::high_resolution_clock::now();
+
+	std::chrono::duration<double> elapsed_time = time_end - time_start;
+
+	try {
+		if(mPyUpdateF.ptr() != nullptr && mVscript.ptr() != nullptr)
+			mPyUpdateF(mVscript); //call update in python object...
 		}
 	catch (const std::runtime_error& e) {
 		std::cout << e.what() << std::endl;
 	}
 }
 
-void Script::init() {
-	try {
-		if (_py_init_f.ptr() != nullptr && _vscript.ptr() != nullptr)
-			_py_init_f(); //call init in python object...
-	}
-	catch (const std::runtime_error& e) {
-		std::cout << e.what() << std::endl;
-	}
+void Script::log(std::string str) {
+	std::cout << mScriptFile << ": " << str << std::endl;
 }
 
 void Script::setScript(std::string script){
-	_script_file = script;
-	_init();
-}
-
-int Script::scriptSize(std::string script) {
-	if (script.empty()) {
-		return 0;
-	}
-	std::ifstream in(_script_file, std::ifstream::ate | std::ifstream::binary);
-	std::streampos pos = in.tellg();
-	return (int)pos;
-}
-
-bool Script::hasScriptChanged() {
-	bool changed = false;
-	int new_script_size = scriptSize(_script_file);
-	if (_script_size != new_script_size) {
-		changed = true;
-	}
-	_script_size = new_script_size;
-	return changed;
+	mScriptFile = script;
+	initScript();
 }
 
 ///////////////////////////////////////////////
 //
 //		PRIVATE
 
-bool Script::_init() {
+int Script::scriptSize(std::string script) {
+	if (script.empty()) {
+		return 0;
+	}
+	std::ifstream in(mScriptFile, std::ifstream::ate | std::ifstream::binary);
+	std::streampos pos = in.tellg();
+	return (int)pos;
+}
+
+bool Script::hasScriptChanged() {
+	bool changed = false;
+	int new_script_size = scriptSize(mScriptFile);
+	if (mScriptSize != new_script_size) {
+		changed = true;
+	}
+	mScriptSize = new_script_size;
+	return changed;
+}
+
+bool Script::initScript() {
 	//try init the python scripting instance and run init there
-	if (_script_file.empty()) {
+	if (mScriptFile.empty()) {
+		std::cerr << ">>> Error! empty script cannot be initialized." << std::endl;
 		return false;
 	}
 
-	_script_size = scriptSize(_script_file);
+	mScriptSize = scriptSize(mScriptFile);
 
 	try
 	{
 		//pybind11_init_wrapper();
 		
-		//auto py_module = py::module::import(_script_file.c_str());
-		_module = py::module::import("script1");
-		_module_vscript = _module.attr("VScript");
+		mModule = py::module::import(mScriptFile.c_str());
 
-
-		_vscript = _module_vscript(this);
-
-		_py_init_f = _vscript.attr("init");
-		
-		_py_update_f = _vscript.attr("update");
+		mModuleVscript = mModule.attr("Script");
+		mVscript = mModuleVscript(this);
+		mPyInitF = mVscript.attr("init");
+		mPyUpdateF = mVscript.attr("update");
 		
 	}
 	catch (const std::runtime_error& e)
 	{
-
-		std::cerr << ">>> Error! Uncaught exception:\n";
+		std::cerr << ">>> Error! Uncaught exception in " << mScriptFile << ":\n";
 		std::cerr << e.what() << std::endl;
 		PyErr_Print();
 	}
@@ -146,16 +128,16 @@ bool Script::_init() {
 	return true;
 }
 
-bool Script::_deint() {
+bool Script::cleanUpScript() {
 	//TODO: ...
 	return true;
 }
 
-bool Script::_reinit() {
-	if (_script_file.empty()) {
+bool Script::reinitScript() {
+	if (mScriptFile.empty()) {
 		return false;
 	}
-	std::ifstream in(_script_file, std::ifstream::ate | std::ifstream::binary);
+	std::ifstream in(mScriptFile, std::ifstream::ate | std::ifstream::binary);
 	std::streampos pos = in.tellg();
 
 	return true;

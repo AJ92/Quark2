@@ -4,40 +4,22 @@
 
 ScriptSystem::ScriptSystem()
 {
-	_init();
+	init();
 }
 
 ScriptSystem::ScriptSystem(std::shared_ptr<ComponentManagement> cm) :
-	_component_management(cm)
+	mComponentManagement(cm)
 {
-	_init();
+	init();
 }
 
 ScriptSystem::~ScriptSystem()
 {
-    _deint_python();
+	cleanUpPython();
 }
 
 void ScriptSystem::init() {
-	std::vector<std::shared_ptr<Component> > comps = _component_management->getAllComponentsByType(Component::Script);
-	for (auto const& comp : comps) {
-		comp->init();
-	}
-}
-
-void ScriptSystem::update() {
-	std::vector<std::shared_ptr<Component> > comps = _component_management->getAllComponentsByType(Component::Script);
-	for (auto const& comp : comps) {
-		comp->update();
-	}
-}
-
-///////////////////////////////////////////////
-//
-//		PRIVATE
-
-bool ScriptSystem::_init() {
-	bool init_done = _init_python();
+	bool init_done = initPython();
 
 	if (init_done) {
 		std::cout << "Python initialized" << std::endl;
@@ -45,48 +27,42 @@ bool ScriptSystem::_init() {
 	else {
 		std::cout << "Python initialization failed" << std::endl;
 	}
-	return init_done;
+
+	std::vector<std::shared_ptr<Component> > comps = mComponentManagement->getAllComponentsByType(Component::Type::Script);
+	for (auto const& comp : comps) {
+		comp->init();
+	}
 }
 
-bool ScriptSystem::_deinit() {
-	bool deinit_done = _deint_python();
-
-	if (deinit_done) {
-		std::cout << "Python deinitialized" << std::endl;
+void ScriptSystem::update() {
+	std::vector<std::shared_ptr<Component> > comps = mComponentManagement->getAllComponentsByType(Component::Type::Script);
+	for (auto const& comp : comps) {
+		comp->update();
 	}
-	else {
-		std::cout << "Python deinitialization failed" << std::endl;
-	}
-	return deinit_done;
 }
 
-bool ScriptSystem::_init_python() {
+
+bool ScriptSystem::initPython() {
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 	//windows
-	//Py_SetProgramName(L"Vulkan0Script"); /* optional but recommended */
+	Py_SetProgramName(L"Vulkan0Script");
+#elif
 	//linux 
-	//Py_SetProgramName("Vulkan0Script");  /* optional but recommended */
-
-
-	/*Py_Initialize();
-	PyRun_SimpleString(
-		"import sys\n"
-		"print (sys.version)\n"
-	);
-	*/
-
+	//Py_SetProgramName("Vulkan0Script");
+#endif	
 	py::dict locals;
-	locals["resource_path"] = py::cast("/home/aj/Code/Quark2/bin/resources/scripts");
+	locals["resource_path"] = py::cast("resources/scripts");
 	py::exec(
 		"import sys\n"
 		"sys.path.append(resource_path)\n",
 		py::globals(),
 		locals
 	);
-
+	
 	return true;
 }
 
-bool ScriptSystem::_deint_python() {
+bool ScriptSystem::cleanUpPython() {
 	//Py_Finalize(); //segfault, need to check...
 	return true;
 }

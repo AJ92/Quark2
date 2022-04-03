@@ -16,12 +16,12 @@ EntityManagement::~EntityManagement() {
 std::shared_ptr<Entity> EntityManagement::createEntity(std::string identifier){
     //check if identifier is not used yet...
     std::map<std::string, std::shared_ptr<Entity> >::iterator it_map;
-	it_map = _identifier_entity_map.find(identifier);
+	it_map = mIdentifierEntityMap.find(identifier);
 
-	if (it_map == _identifier_entity_map.end()) {
+	if (it_map == mIdentifierEntityMap.end()) {
         //identifier not in the map yet so entity can use it
         std::shared_ptr<Entity> entity = std::make_shared<Entity>(identifier);
-        _identifier_entity_map[identifier] = entity;
+        mIdentifierEntityMap[identifier] = entity;
         return entity;
     }
 
@@ -29,10 +29,10 @@ std::shared_ptr<Entity> EntityManagement::createEntity(std::string identifier){
     std::srand(std::time(0));
 	for(int i = 0; i < 3; i++){
         std::string new_identifier = identifier + "_" + std::to_string(std::rand());
-        it_map = _identifier_entity_map.find(identifier);
-        if (it_map == _identifier_entity_map.end()) {
+        it_map = mIdentifierEntityMap.find(identifier);
+        if (it_map == mIdentifierEntityMap.end()) {
             std::shared_ptr<Entity> entity = std::make_shared<Entity>(new_identifier);
-            _identifier_entity_map[new_identifier] = entity;
+            mIdentifierEntityMap[new_identifier] = entity;
             return entity;
         }
 	}
@@ -43,9 +43,9 @@ std::vector<std::shared_ptr<Component> > EntityManagement::getAllComponentsFromE
 	std::shared_ptr<Entity> entity)
 {
 	std::map<std::string, std::vector<std::shared_ptr<Component> > >::iterator it_map;
-	it_map = _identifier_component_list_map.find(entity->getIdentifier());
+	it_map = mIdentifierComponentListMap.find(entity->getIdentifier());
 
-	if (it_map == _identifier_component_list_map.end()) {
+	if (it_map == mIdentifierComponentListMap.end()) {
 		return std::vector<std::shared_ptr<Component> >();
 	}
 
@@ -58,9 +58,9 @@ std::vector<std::shared_ptr<Component> > EntityManagement::getAllComponentsFromE
 	std::vector<std::shared_ptr<Component> > result;
 
 	std::map<std::string, std::vector<std::shared_ptr<Component> > >::iterator it_map;
-	it_map = _identifier_component_list_map.find(entity->getIdentifier());
+	it_map = mIdentifierComponentListMap.find(entity->getIdentifier());
 
-	if (it_map == _identifier_component_list_map.end()) {
+	if (it_map == mIdentifierComponentListMap.end()) {
 		return result;
 	}
 
@@ -79,16 +79,16 @@ std::vector<std::shared_ptr<Component> > EntityManagement::getAllComponentsFromE
 std::vector<std::shared_ptr<Component> > EntityManagement::getAllComponentsByType(
 	Component::Type type)
 {
-	return _component_management.getAllComponentsByType(type);
+	return mComponentManagement.getAllComponentsByType(type);
 }
 
 bool EntityManagement::addComponentToEntity(
     std::shared_ptr<Entity> entity, std::shared_ptr<Component> comp)
 {
 	std::map<std::string, std::vector<std::shared_ptr<Component> > >::iterator it_map;
-	it_map = _identifier_component_list_map.find(entity->getIdentifier());
+	it_map = mIdentifierComponentListMap.find(entity->getIdentifier());
 
-	if (it_map == _identifier_component_list_map.end()) {
+	if (it_map == mIdentifierComponentListMap.end()) {
         return false;
 	}
 
@@ -100,9 +100,9 @@ bool EntityManagement::removeComponentFromEntity(
     std::shared_ptr<Entity> entity, std::shared_ptr<Component> comp)
 {
     std::map<std::string, std::vector<std::shared_ptr<Component> > >::iterator it_map;
-	it_map = _identifier_component_list_map.find(entity->getIdentifier());
+	it_map = mIdentifierComponentListMap.find(entity->getIdentifier());
 
-	if (it_map == _identifier_component_list_map.end()) {
+	if (it_map == mIdentifierComponentListMap.end()) {
         return false;
 	}
 
@@ -123,9 +123,9 @@ bool EntityManagement::removeComponentsFromEntityByType(
     std::shared_ptr<Entity> entity, Component::Type type)
 {
     std::map<std::string, std::vector<std::shared_ptr<Component> > >::iterator it_map;
-	it_map = _identifier_component_list_map.find(entity->getIdentifier());
+	it_map = mIdentifierComponentListMap.find(entity->getIdentifier());
 
-	if (it_map == _identifier_component_list_map.end()) {
+	if (it_map == mIdentifierComponentListMap.end()) {
         return false;
 	}
 

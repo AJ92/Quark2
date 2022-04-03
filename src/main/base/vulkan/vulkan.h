@@ -91,16 +91,16 @@ public:
 	};
 
 private:
-	bool _pre_init();
+	bool preInit();
 
 //VULKAN INIT
-	bool _init_vulkan();
+	bool initVulkan();
 //VULKAN INSTANCE
-	bool _create_instance();
+	bool createInstance();
 //VULKAN VALIDATION
-	bool _check_validation_layer_support();
-	std::vector<const char*> _get_required_extensions();
-	static VKAPI_ATTR VkBool32 VKAPI_CALL _debug_callback(
+	bool checkValidationLayerSupport();
+	std::vector<const char*> getRequiredExtensions();
+	static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
 		VkDebugReportFlagsEXT flags,
 		VkDebugReportObjectTypeEXT objType,
 		uint64_t obj,
@@ -109,163 +109,163 @@ private:
 		const char* layerPrefix,
 		const char* msg,
 		void* userData);
-	void _setup_debug_callback();
-	static VkResult _create_debug_report_callback_EXT(
+	void setupDebugCallback();
+	static VkResult createDebugReportCallbackEXT(
 		VkInstance instance,
 		const VkDebugReportCallbackCreateInfoEXT* pCreateInfo,
 		const VkAllocationCallbacks* pAllocator,
 		VkDebugReportCallbackEXT* pCallback);
-	static void _destroy_debug_report_callback_EXT(
+	static void destroyDebugReportCallbackEXT(
 		VkInstance instance,
 		VkDebugReportCallbackEXT callback,
 		const VkAllocationCallbacks* pAllocator);
 //VULKAN PHYSICAL DEVICE
-	bool _pick_physical_device();
-	bool _is_device_suitable(VkPhysicalDevice device);
-	QueueFamilyIndices _find_queue_families(VkPhysicalDevice device);
+	bool pickPhysicalDevice();
+	bool isDeviceSuitable(VkPhysicalDevice device);
+	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 //VULKAN LOGICAL DEVICE
-	bool _create_logical_device();
+	bool createLogicalDevice();
 //VULKAN SURFACE
-	bool _create_surface();
+	bool createSurface();
 //VULKAN DEVICE EXTENSION SUPPORT (SWAPCHAIN, ...)
-	bool _check_device_extension_support(VkPhysicalDevice device);
-	SwapChainSupportDetails _query_swap_chain_support(VkPhysicalDevice device);
+	bool checkDeviceExtensionSupport(VkPhysicalDevice device);
+	SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
 //VULKAN SWAPCHAIN CONFIG
-	VkSurfaceFormatKHR _choose_swap_surface_format(
+	VkSurfaceFormatKHR chooseSwapSurfaceFormat(
 		const std::vector<VkSurfaceFormatKHR>& availableFormats);
-	VkPresentModeKHR _choose_swap_present_mode(
+	VkPresentModeKHR chooseSwapPresentMode(
 		const std::vector<VkPresentModeKHR> availablePresentModes);
-	VkExtent2D _choose_swap_extent(const VkSurfaceCapabilitiesKHR& capabilities);
-	bool _create_swap_chain();
-	bool _recreate_swap_chain();
-	bool _clean_up_swap_chain();
+	VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+	bool createSwapChain();
+	bool recreateSwapChain();
+	bool cleanUpSwapChain();
 //VULKAN IMAGE VIEWS
-	VkImageView _create_image_view(
+	VkImageView createImageView(
 		VkImage image, VkFormat format, VkImageAspectFlags aspectFlags);
-	bool _create_image_views();
+	bool createImageViews();
 //VULKAN DESCRIPTORSETS
-	bool _create_descriptor_set_layout();
+	bool createDescriptorSetLayout();
 //VULKAN GFX PIPELINES
-	bool _create_graphics_pipeline();
-	static std::vector<char> _read_file(const std::string& filename);
-	bool _create_shader_module(const std::vector<char>& code, VkShaderModule& shaderModule);
+	bool createGraphicsPipeline();
+	static std::vector<char> readFile(const std::string& filename);
+	bool createShaderModule(const std::vector<char>& code, VkShaderModule& shaderModule);
 //VULKAN RENDER PASS
-	bool _create_render_pass();
+	bool createRenderPass();
 //VULKAN FRAMEBFFERS
-	bool _create_frame_buffers();
+	bool createFrameBuffers();
 //VULKAN COMMAND POOL
-	bool _create_command_pool();
+	bool createCommandPool();
 //VULKAN SINGLE TIME COMMANDS
-	VkCommandBuffer _begin_single_time_commands();
-	void _end_single_time_commands(VkCommandBuffer commandBuffer);
+	VkCommandBuffer beginSingleTimeCommands();
+	void endSingleTimeCommands(VkCommandBuffer commandBuffer);
 //VULKAN DEPTH RES
-	VkFormat _find_supported_format(
+	VkFormat findSupportedFormat(
 		const std::vector<VkFormat>& candidates,
 		VkImageTiling tiling,
 		VkFormatFeatureFlags features);
-	VkFormat _find_depth_format();
-	bool _has_stencil_component(VkFormat format);
-	bool _create_depth_resources();
+	VkFormat findDepthFormat();
+	bool hasStencilComponent(VkFormat format);
+	bool createDepthResources();
 //VULKAN TEXTURE IMAGE
-	bool _create_image(
+	bool createImage(
 		uint32_t width, uint32_t height, VkFormat format,
 		VkImageTiling tiling, VkImageUsageFlags usage,
 		VkMemoryPropertyFlags properties, VkImage& image,
 		VkDeviceMemory& imageMemory);
-	bool _create_texture_image();
-	bool _transition_image_layout(
+	bool createTextureImage();
+	bool transitionImageLayout(
 		VkImage image, VkFormat format,
 		VkImageLayout oldLayout, VkImageLayout newLayout);
-	bool _copy_buffer_to_image(
+	bool copyBufferToImage(
 		VkBuffer buffer, VkImage image,
 		uint32_t width, uint32_t height);
-	bool _create_texture_image_view();
-	bool _create_texture_sampler();
+	bool createTextureImageView();
+	bool createTextureSampler();
 //VULKAN DESCRIPTOR POOL
-	bool _create_descriptor_pool();
-	bool _create_descriptor_set();
+	bool createDescriptorPool();
+	bool createDescriptorSet();
 //VULKAN BUFFER
-	bool _create_buffer(
+	bool createBuffer(
 		VkDeviceSize size, VkBufferUsageFlags usage,
 		VkMemoryPropertyFlags properties, VkBuffer& buffer,
 		VkDeviceMemory& bufferMemory);
-	bool _copy_buffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+	bool copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 //VULKAN BUFFER
-	bool _create_vertex_buffer();
-	bool _create_index_buffer();
-	bool _create_uniform_buffer();
-	uint32_t _find_memory_type(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+	bool createVertexBuffer();
+	bool createIndexBuffer();
+	bool createUniformBuffer();
+	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 //VULKAN COMMAND BUFFERS
-	bool _create_command_buffers();
+	bool createCommandBuffers();
 //VULKAN SEMAPHORES
-	bool _create_semaphores();
-	bool _post_init();
+	bool createSemaphores();
+	bool postInit();
 
 
 	//if in debug
-	bool						_debug;
+	bool						isDebug;
 
-	GLFWwindow *				_glfw_window;
-	int							_window_height;
-	int							_window_width;
+	GLFWwindow *				mGlfwWindow;
+	int							mWindowHeight;
+	int							mWindowWidth;
 
-	VkInstance					_vulkan_instance;
-	VkDebugReportCallbackEXT	_debug_callback_instance;
+	VkInstance					mVulkanInstance;
+	VkDebugReportCallbackEXT	mDebugCallbackInstance;
 
-	VkSurfaceKHR				_vulkan_surface;
+	VkSurfaceKHR				mVulkanSurface;
 
-	VkPhysicalDevice			_physical_device = VK_NULL_HANDLE;
-	VkDevice					_vulkan_device; //logical device
+	VkPhysicalDevice			mPhysicalDevice = VK_NULL_HANDLE;
+	VkDevice					mVulkanDevice; //logical device
 
-	VkQueue						_graphics_queue;
-	VkQueue						_present_queue;
+	VkQueue						mGraphicsQueue;
+	VkQueue						mPresentQueue;
 
-	VkSwapchainKHR				_swap_chain;
+	VkSwapchainKHR				mSwapChain;
 
-	std::vector<VkImage>		_swap_chain_images;
+	std::vector<VkImage>		mSwapChainImages;
 
-	VkFormat					_swap_chain_image_format;
-	VkExtent2D					_swap_chain_extent;
+	VkFormat					mSwapChainImageFormat;
+	VkExtent2D					mSwapChainExtent;
 
-	std::vector<VkImageView>	_swap_chain_image_views;
+	std::vector<VkImageView>	mSwapChainImageViews;
 
-	VkImage						_depth_image;
-	VkDeviceMemory				_depth_image_memory;
-	VkImageView					_depth_image_view;
+	VkImage						mDepthImage;
+	VkDeviceMemory				mDepthImageMemory;
+	VkImageView					mDepthImageView;
 
-	VkDescriptorSetLayout		_descriptor_set_layout;
-	VkPipelineLayout			_pipeline_layout;
+	VkDescriptorSetLayout		mDescriptorSetLayout;
+	VkPipelineLayout			mPipelineLayout;
 
-	VkRenderPass				_render_pass;
+	VkRenderPass				mRenderPass;
 
-	VkPipeline					_graphics_pipeline;
+	VkPipeline					mGraphicsPipeline;
 
-	std::vector<VkFramebuffer>	_swap_chain_framebuffers;
+	std::vector<VkFramebuffer>	mSwapChainFrameBuffers;
 
-	VkCommandPool				_command_pool;
+	VkCommandPool				mCommandPool;
 
-	VkImage						_texture_image;
-	VkDeviceMemory				_texture_image_memory;
-	VkImageView					_texture_image_view;
-	VkSampler					_texture_sampler;
+	VkImage						mTextureImage;
+	VkDeviceMemory				mTextureImageMemory;
+	VkImageView					mTextureImageView;
+	VkSampler					mTextureSampler;
 
-	VkDescriptorPool			_descriptor_pool;
-	VkDescriptorSet				_descriptor_set;
+	VkDescriptorPool			mDescriptorPool;
+	VkDescriptorSet				mDescriptorSet;
 
-	VkBuffer					_vertex_buffer;
-	VkDeviceMemory				_vertex_buffer_memory;
-	VkBuffer					_index_buffer;
-	VkDeviceMemory				_index_buffer_memory;
-	VkBuffer					_uniform_buffer;
-	VkDeviceMemory				_uniform_buffer_memory;
+	VkBuffer					mVertexBuffer;
+	VkDeviceMemory				mVertexBufferMemory;
+	VkBuffer					mIndexBuffer;
+	VkDeviceMemory				mIndexBufferMemory;
+	VkBuffer					mUniformBuffer;
+	VkDeviceMemory				mUniformBufferMemory;
 
-	std::vector<VkCommandBuffer> _command_buffers;
+	std::vector<VkCommandBuffer> mCommandBuffers;
 
 	//RENDERING
-	VkSemaphore _image_available_semaphore;
-	VkSemaphore _render_finished_semaphore;
+	VkSemaphore mImageAvailableSemaphore;
+	VkSemaphore mRenderFinishedSemaphore;
 
-	const std::vector<Vertex> _vertices = {
+	const std::vector<Vertex> mVertices = {
 		{ { -0.5f, -0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } },
 		{ {  0.5f, -0.5f, 0.0f }, { 0.0f, 1.0f, 0.0f }, { 1.0f, 0.0f } },
 		{ {  0.5f,  0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } },
@@ -277,7 +277,7 @@ private:
 		{ { -0.5f,  0.5f, -0.5f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }
 	};
 	
-	const std::vector<uint32_t> _indices = {
+	const std::vector<uint32_t> mIndices = {
 		0, 1, 2, 2, 3, 0,
 		4, 5, 6, 6, 7, 4
 	};

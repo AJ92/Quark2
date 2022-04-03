@@ -21,7 +21,7 @@ ResourceManagement::~ResourceManagement() {
 std::shared_ptr<Component> ResourceManagement::loadResource(std::string file, bool * success) {
 	//check if already loaded
 	if(isLoaded(file)){
-		auto it = _file_component_map.find(file);
+		auto it = mFileComponentMap.find(file);
 		if(success != nullptr){
 			*success = true;
 		}
@@ -43,8 +43,8 @@ void ResourceManagement::freeResource(Component comp) {
 }
 
 bool ResourceManagement::isLoaded(std::string file){
-	auto it = _file_component_map.find(file);
-	if(it != _file_component_map.end()){
+	auto it = mFileComponentMap.find(file);
+	if(it != mFileComponentMap.end()){
 		return true;
 	}
 	return false;

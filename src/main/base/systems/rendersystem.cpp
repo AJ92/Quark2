@@ -4,13 +4,11 @@
 
 RenderSystem::RenderSystem()
 {
-	//_init();
 }
 
 RenderSystem::RenderSystem(std::shared_ptr<ComponentManagement> cm) :
-	_component_management(cm)
+	mComponentManagement(cm)
 {
-	//_init();
 }
 
 RenderSystem::~RenderSystem()
@@ -19,14 +17,14 @@ RenderSystem::~RenderSystem()
 }
 
 void RenderSystem::init() {
-	std::vector<std::shared_ptr<Component> > comps = _component_management->getAllComponentsByType(Component::Renderer);
+	std::vector<std::shared_ptr<Component> > comps = mComponentManagement->getAllComponentsByType(Component::Type::Renderer);
 	for (auto const& comp : comps) {
 		comp->init();
 	}
 }
 
 void RenderSystem::update() {
-	std::vector<std::shared_ptr<Component> > comps = _component_management->getAllComponentsByType(Component::Renderer);
+	std::vector<std::shared_ptr<Component> > comps = mComponentManagement->getAllComponentsByType(Component::Type::Renderer);
 	for (auto const& comp : comps) {
 		comp->update();
 	}

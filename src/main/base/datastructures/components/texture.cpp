@@ -9,7 +9,7 @@ Texture::Texture() :
 
 Texture::Texture(std::string & textureFile) :
 	Component(Type::Texture),
-	_texture_file(textureFile)
+	mTextureFile(textureFile)
 {
 
 }

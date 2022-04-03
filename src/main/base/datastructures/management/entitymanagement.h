@@ -35,10 +35,10 @@ public:
 
 private:
 
-	std::map<std::string, std::shared_ptr<Entity> > _identifier_entity_map;
-	std::map<std::string, std::vector<std::shared_ptr<Component> > > _identifier_component_list_map;
+	std::map<std::string, std::shared_ptr<Entity> > mIdentifierEntityMap;
+	std::map<std::string, std::vector<std::shared_ptr<Component> > > mIdentifierComponentListMap;
 
-	ComponentManagement _component_management;
+	ComponentManagement mComponentManagement;
 };
 
 #endif // ENTITYMANAGEMENT_H

@@ -4,8 +4,7 @@ project(engine)
 
 set(CMAKE_CXX_STANDARD 14)
 
-
-
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 
 ###############################################################################
@@ -15,18 +14,16 @@ set(CMAKE_CXX_STANDARD 14)
 # these instructions search the directory tree when cmake is
 # invoked and put all files that match the pattern in the variables
 # `sources` and `data`
-file(GLOB_RECURSE sources       src/main/*.cpp src/main/*.h
-								src/main/base/*.cpp src/main/base/*.h
-								src/main/base/datastructures/*.cpp src/main/base/datastructures/*.h
-                                src/main/base/datastructures/components/*.cpp src/main/base/datastructures/components/*.h	
-                                src/main/base/datastructures/management/*.cpp src/main/base/datastructures/management/*.h
-                                src/main/base/audio/*.cpp src/main/base/audio/*.h	
-                                src/main/base/vulkan/*.cpp src/main/base/vulkan/*.h		
-                                src/main/base/systems/*.cpp src/main/base/systems/*.h
-                                )
+
+file(GLOB_RECURSE sources       src/main/*.cpp src/main/*.h)
 
 file(GLOB_RECURSE sources_test  src/test/*.cpp)
-file(GLOB_RECURSE data          src/resources/*)
+file(GLOB_RECURSE data          src/resources/*.frag src/resources/*.vert src/resources/*.py src/resources/*.sh src/resources/*.bat)
+
+
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${sources})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${sources_test})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${data})
 
 
 ###############################################################################
@@ -40,12 +37,10 @@ file(GLOB_RECURSE data          src/resources/*)
 ###############################################################################
 
 
-add_executable(engine ${sources})
-# add the data to the target, so it becomes visible in some IDE
-# add_executable(engine ${data})
+add_executable(engine ${sources} ${data})
 
 # just for example add some compiler flags
-target_compile_options(engine PUBLIC -Wall)
+# target_compile_options(engine PUBLIC -Wall)
 
 # this lets me include files relative to the root src dir with a <> pair
 target_include_directories(engine PUBLIC src/main)
@@ -64,44 +59,47 @@ file(COPY src/resources/ DESTINATION resources FILES_MATCHING PATTERN "*.py")
 ###############################################################################
 
 if (WIN32)
-    #Python
-    #find_package(PythonLibs REQUIRED)
-    set(PYTHON_INCLUDE_DIRS )
-    include_directories(${PYTHON_INCLUDE_DIRS})
-    target_link_libraries(engine PUBLIC ${PYTHON_LIBRARIES})
-    include_directories(engine PUBLIC thirdparty/pybind11/include)
+  #Python
+  #find_package(PythonLibs REQUIRED)
+  set(PYTHON_INCLUDE_DIRS C:/Users/AJ/AppData/Local/Programs/Python/Python310/include)
+  set(PYTHON_LIBRARIES C:/Users/AJ/AppData/Local/Programs/Python/Python310/libs/python3.lib C:/Users/AJ/AppData/Local/Programs/Python/Python310/libs/python310.lib)
+  include_directories(${PYTHON_INCLUDE_DIRS})
+  target_link_libraries(engine PUBLIC ${PYTHON_LIBRARIES})
 
-    #opengl
-    #target_link_libraries(engine PUBLIC opengl32)
+  add_subdirectory(thirdparty/pybind11)
+  target_link_libraries(engine PRIVATE pybind11::embed)
 
-    #Vulkan
-    target_include_directories(engine PUBLIC C:/VulkanSDK/1.0.46.0/Include)
-    target_link_libraries(engine PUBLIC debug C:/VulkanSDK/1.0.46.0/Lib/vulkan-1.lib)
-    target_link_libraries(engine PUBLIC optimized C:/VulkanSDK/1.0.46.0/Lib/vulkan-1.lib)
+  #opengl
+  #target_link_libraries(engine PUBLIC opengl32)
 
-    #GLFW
-    target_include_directories(engine PUBLIC thirdparty/glfw/include)
-    target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glfw/windows/bin/Debug/glfw3.lib)
-    target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glfw/windows/bin/Release/glfw3.lib)
+  #Vulkan
+  target_include_directories(engine PUBLIC C:/VulkanSDK/1.3.204.1/Include)
+  target_link_libraries(engine PUBLIC debug C:/VulkanSDK/1.3.204.1/Lib/vulkan-1.lib)
+  target_link_libraries(engine PUBLIC optimized C:/VulkanSDK/1.3.204.1/Lib/vulkan-1.lib)
 
-    #GLM
-    include_directories(engine PUBLIC thirdparty/glm/include)
+  #GLFW
+  target_include_directories(engine PUBLIC thirdparty/glfw/include)
+  target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glfw/windows/bin/Debug/glfw3.lib)
+  target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glfw/windows/bin/Release/glfw3.lib)
 
-	#STB
-	include_directories(engine PUBLIC thirdparty/stb/include)
+  #GLM
+  include_directories(engine PUBLIC thirdparty/glm/include)
 
-	#TINY OBJ LOADER
-	include_directories(engine PUBLIC thirdparty/tinyobjloader/include)
-	
-    #PORTAUDIO
-    #target_include_directories(engine PUBLIC thirdparty/portaudio/include)
-    #target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/portaudio/bin/Debug/portaudio_static_x64.lib)
-    #target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/portaudio/bin/Release/portaudio_static_x64.lib)
+  #STB
+  include_directories(engine PUBLIC thirdparty/stb/include)
 
-    #LIBSNDFILE
-    #target_include_directories(engine PUBLIC thirdparty/libsndfile/include)
-    #target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/libsndfile/bin/Release/libsndfile-1.lib)
-    #target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/libsndfile/bin/Release/libsndfile-1.lib)
+  #TINY OBJ LOADER
+  include_directories(engine PUBLIC thirdparty/tinyobjloader/include)
+
+  #PORTAUDIO
+  #target_include_directories(engine PUBLIC thirdparty/portaudio/include)
+  #target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/portaudio/bin/Debug/portaudio_static_x64.lib)
+  #target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/portaudio/bin/Release/portaudio_static_x64.lib)
+
+  #LIBSNDFILE
+  #target_include_directories(engine PUBLIC thirdparty/libsndfile/include)
+  #target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/libsndfile/bin/Release/libsndfile-1.lib)
+  #target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/libsndfile/bin/Release/libsndfile-1.lib)
 
 
 
@@ -109,35 +107,37 @@ endif (WIN32)
 
 
 if (UNIX)
-    #Python
-    #find_package(PythonLibs REQUIRED)
-    set(PYTHON_INCLUDE_DIRS /usr/include/python3.5)
-    set(PYTHON_LIBRARIES /usr/lib/x86_64-linux-gnu/libpython3.5m.so)
-    include_directories(${PYTHON_INCLUDE_DIRS})
-    target_link_libraries(engine PUBLIC ${PYTHON_LIBRARIES})
-    include_directories(engine PUBLIC thirdparty/pybind11/include)
+  #Python
+  #find_package(PythonLibs REQUIRED)
+  set(PYTHON_INCLUDE_DIRS /usr/include/python3.5)
+  set(PYTHON_LIBRARIES /usr/lib/x86_64-linux-gnu/libpython3.5m.so)
+  include_directories(${PYTHON_INCLUDE_DIRS})
+  target_link_libraries(engine PUBLIC ${PYTHON_LIBRARIES})
 
-    #Vulkan
-    target_include_directories(engine PUBLIC thirdparty/vulkan/include)
-    target_link_libraries(engine PUBLIC debug ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/vulkan/linux/bin/Release/libvulkan.so)
-    target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/vulkan/linux/bin/Release/libvulkan.so)
+  add_subdirectory(thirdparty/pybind11)
+  target_link_libraries(engine PRIVATE pybind11::embed)
 
-    #GLFW
-    target_include_directories(engine PUBLIC thirdparty/glfw/include)
-    target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glfw/linux/bin/Debug/libglfw3.a)
-    target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glfw/linux/bin/Release/libglfw3.a)
+  #Vulkan
+  target_include_directories(engine PUBLIC thirdparty/vulkan/include)
+  target_link_libraries(engine PUBLIC debug ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/vulkan/linux/bin/Release/libvulkan.so)
+  target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/vulkan/linux/bin/Release/libvulkan.so)
 
-    #GLM
-    include_directories(engine PUBLIC thirdparty/glm/include)
+  #GLFW
+  target_include_directories(engine PUBLIC thirdparty/glfw/include)
+  target_link_libraries(engine PUBLIC debug  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glfw/linux/bin/Debug/libglfw3.a)
+  target_link_libraries(engine PUBLIC optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glfw/linux/bin/Release/libglfw3.a)
 
-	#STB
-	include_directories(engine PUBLIC thirdparty/stb/include)
+  #GLM
+  include_directories(engine PUBLIC thirdparty/glm/include)
 
-	#TINY OBJ LOADER
-	include_directories(engine PUBLIC thirdparty/tinyobjloader/include)
+  #STB
+  include_directories(engine PUBLIC thirdparty/stb/include)
 
-	#bla bla could also search for glfw but now i see what libs are linked...
-    target_link_libraries(engine PUBLIC -lX11 -lXxf86vm -lXrandr -lpthread -lXi -ldl -lXinerama -lXcursor)
+  #TINY OBJ LOADER
+  include_directories(engine PUBLIC thirdparty/tinyobjloader/include)
+
+  #bla bla could also search for glfw but now i see what libs are linked...
+  target_link_libraries(engine PUBLIC -lX11 -lXxf86vm -lXrandr -lpthread -lXi -ldl -lXinerama -lXcursor)
 endif (UNIX)
 
 #remove the console

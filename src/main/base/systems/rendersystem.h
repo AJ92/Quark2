@@ -20,7 +20,7 @@ public:
 	virtual void update();
 	
 private:
-	std::shared_ptr<ComponentManagement> _component_management;
+	std::shared_ptr<ComponentManagement> mComponentManagement;
 };
 
 #endif // RENDERSYSTEM_H

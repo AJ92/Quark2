@@ -8,8 +8,7 @@ class Shader: public Component
 {
 public:
 	Shader();
-	Shader(std::string & vertexShaderFile,
-		std::string & fragmentShaderFile);
+	Shader(std::string & vertexShaderFile, std::string & fragmentShaderFile);
 	~Shader();
 
 	virtual void init();
@@ -17,8 +16,8 @@ public:
 
 private:
 
-	std::string _vshader_file;
-	std::string _fshader_file;
+	std::string mVShaderFile;
+	std::string mFShaderFile;
 };
 
 #endif // SHADER_H

@@ -2,7 +2,7 @@
 
 
 Component::Component(Type type):
-	_type(type)
+	mType(type)
 {
 	
 }
@@ -12,7 +12,7 @@ Component::~Component() {
 }
 
 Component::Type Component::getType() {
-	return _type;
+	return mType;
 }
 
 void Component::init() {

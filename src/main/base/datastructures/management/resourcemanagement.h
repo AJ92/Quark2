@@ -28,9 +28,9 @@ public:
 
 private:
 	// file -> component mapping
-	std::unordered_map<std::string, std::shared_ptr<Component> > _file_component_map;
+	std::unordered_map<std::string, std::shared_ptr<Component> > mFileComponentMap;
 	// file -> usage count mapping
-	std::unordered_map<std::string, long > _file_usage_map;
+	std::unordered_map<std::string, long > mFileUsageMap;
 };
 
 #endif // RESOURCEMANAGEMENT_H

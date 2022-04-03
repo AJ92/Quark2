@@ -5,11 +5,12 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/embed.h>
 #include <pybind11/eval.h>
+#include <chrono>
 
 
 namespace py = pybind11;
 
-static bool _py_module_initialized = false;
+static bool PY_MODULE_INITIALIZED = false;
 
 class Script: public Component
 {
@@ -18,36 +19,37 @@ public:
 	Script(const Script &script);
 	~Script();
 
-	virtual void init();
-	virtual void update();
-
 	void setScript(std::string script);
 
+	virtual void init() override;
+	virtual void update() override;
+
+	void log(std::string str);
+
+private:
+	
 	int scriptSize(std::string script);
 	bool hasScriptChanged();
 
-private:
-	bool _init();
-	bool _deint();
+	bool initScript();
+	bool cleanUpScript();
 
-	bool _reinit();
-	
-	py::object _import(const std::string& module, const std::string& path, py::object& globals);
+	bool reinitScript();
 
-	std::string _script_file;
-	int _script_size;
+	std::string mScriptFile;
+	int mScriptSize = 0;
 
-	py::object _main;
-	py::object _globals;
-	py::object _module;
-	py::object _module_vscript;
-	py::object _vscript;
+	py::object mMain;
+	py::object mGlobals;
+	py::object mModule;
+	py::object mModuleVscript;
+	py::object mVscript;
 
-	py::object _py_init_f;
-	py::object _py_update_f;
+	py::object mPyInitF;
+	py::object mPyUpdateF;
 
-	
-
+	std::chrono::time_point<std::chrono::high_resolution_clock> mStartTime;
+	std::chrono::time_point<std::chrono::high_resolution_clock> mCheckTime;
 };
 
 #endif // SCRIPT_H

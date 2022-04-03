@@ -15,7 +15,7 @@ public:
 	virtual void update();
 
 private:
-	std::string _texture_file;
+	std::string mTextureFile;
 };
 
 #endif // TEXTURE_H

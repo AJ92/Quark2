@@ -21,8 +21,8 @@ void Geometry::init() {
 }
 
 std::vector<Vertex> & Geometry::getVertexVector(){
-	return _vertices;
+	return mVertices;
 }
 std::vector<uint32_t> & Geometry::getIndexVector(){
-	return _indices;
+	return mIndices;
 }

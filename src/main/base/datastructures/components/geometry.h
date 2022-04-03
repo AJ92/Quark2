@@ -18,8 +18,8 @@ public:
 	std::vector<uint32_t> & getIndexVector();
 
 private:
-	std::vector<Vertex> _vertices;
-	std::vector<uint32_t> _indices;
+	std::vector<Vertex> mVertices;
+	std::vector<uint32_t> mIndices;
 };
 
 #endif // GEOMETRY_H

@@ -10,8 +10,8 @@ Shader::Shader() :
 Shader::Shader(std::string & vertexShaderFile,
 		std::string & fragmentShaderFile) :
 	Component(Type::Shader),
-	_vshader_file(vertexShaderFile),
-	_fshader_file(fragmentShaderFile)
+	mVShaderFile(vertexShaderFile),
+	mFShaderFile(fragmentShaderFile)
 {
 
 }

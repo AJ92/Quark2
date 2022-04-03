@@ -3,8 +3,6 @@
 
 #include "base/systems/system.h"
 #include "base/datastructures/components/script.h"
-#include "base/datastructures/components/scriptinstance.h"
-#include "base/datastructures/components/pyscriptinstance.h"
 #include "base/datastructures/management/componentmanagement.h"
 //#include <Python.h>
 #include <pybind11/pybind11.h>
@@ -28,14 +26,13 @@ public:
 	virtual void update();
 	
 private:
-	std::shared_ptr<ComponentManagement> _component_management;
-
-	bool _init();
-	bool _deinit();
-	bool _init_python();
-	bool _deint_python();
+	bool initPython();
+	bool cleanUpPython();
 
 	py::scoped_interpreter guard{};
+
+	// has to be after the interpreter for dtor order.
+	std::shared_ptr<ComponentManagement> mComponentManagement;
 };
 
 #endif // SCRIPTSYSTEM_H

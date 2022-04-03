@@ -1,11 +1,11 @@
-from Vulkan0Script import *
+from Quark2 import *
 
-class VScript(ScriptInstance):
+class Script():
     def __init__(self, script):
-        ScriptInstance.__init__(self, script)
+        self.script = script
 
     def init(self):
-        self.log("init2")
+        self.script.log("init2")
 
     def update(self, o):
         1+1#self.log("update2")

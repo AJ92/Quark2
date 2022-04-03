@@ -6,7 +6,7 @@ class Component
 {
 public:
 
-	enum Type {
+	enum class Type {
 		GameObject,
 		Transformation,
 		Renderer,
@@ -29,7 +29,7 @@ public:
 	virtual void update();
 
 private:
-	Type _type;
+	Type mType;
 };
 
 #endif // COMPONENT_H

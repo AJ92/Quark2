@@ -1,14 +1,14 @@
-from Vulkan0Script import *
+from Quark2 import *
 
-class VScript(ScriptInstance):
+class Script():
     def __init__(self, script):
-        ScriptInstance.__init__(self, script)
+        self.script = script
 
     def init(self):
-        self.log("init1")
+        self.script.log("init")
 
     def update(self, o):
-        self.primes(5);
+        self.primes(5)
 
     def primes(self, n):
         if n==2: return [2]

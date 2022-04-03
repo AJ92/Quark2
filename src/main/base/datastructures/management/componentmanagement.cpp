@@ -12,13 +12,13 @@ ComponentManagement::~ComponentManagement() {
 
 void ComponentManagement::addComponent(std::shared_ptr<Component> comp) {
 	std::unordered_map<Component::Type, std::vector<std::shared_ptr<Component> >, HashEnumCast >::iterator it_map;
-	it_map = _type_component_map.find(comp->getType());
+	it_map = mTypeCompMap.find(comp->getType());
 
-	if (it_map == _type_component_map.end()) {
+	if (it_map == mTypeCompMap.end()) {
 		//create a new vector
-		_type_component_map[comp->getType()] = std::vector<std::shared_ptr<Component> >();
+		mTypeCompMap[comp->getType()] = std::vector<std::shared_ptr<Component> >();
 
-		it_map = _type_component_map.find(comp->getType());
+		it_map = mTypeCompMap.find(comp->getType());
 	}
 
 	it_map->second.push_back(comp);
@@ -26,9 +26,9 @@ void ComponentManagement::addComponent(std::shared_ptr<Component> comp) {
 
 void ComponentManagement::removeComponent(std::shared_ptr<Component> comp) {
 	std::unordered_map<Component::Type, std::vector<std::shared_ptr<Component> >, HashEnumCast >::iterator it_map;
-	it_map = _type_component_map.find(comp->getType());
+	it_map = mTypeCompMap.find(comp->getType());
 
-	if (it_map == _type_component_map.end()) {
+	if (it_map == mTypeCompMap.end()) {
 		//no vector of this type created yet so we don't have
 		//any comps of this type yet!!!
 		return;
@@ -47,11 +47,11 @@ std::vector<std::shared_ptr<Component> > & ComponentManagement::getAllComponents
 	Component::Type type)
 {
 	std::unordered_map<Component::Type, std::vector<std::shared_ptr<Component> >, HashEnumCast >::iterator it_map;
-	it_map = _type_component_map.find(type);
+	it_map = mTypeCompMap.find(type);
 
-	if (it_map == _type_component_map.end()) {
+	if (it_map == mTypeCompMap.end()) {
 
-		return _empty_comp_vec;
+		return mEmptyCompVec;
 	}
 
 	return it_map->second;

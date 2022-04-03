@@ -23,49 +23,46 @@ public:
 	std::shared_ptr<Vulkan> getVulkanRenderer();
 
 private:
-	bool _debug;
+	bool isDebug;
 
-	bool _pre_init();
-	bool _init_allcoators();
-	bool _init_component_management();
-	bool _init_window();
-	bool _init_audio();
-	bool _init_scripting();
+	bool preInit();
+	bool initAllcoators();
+	bool initComponentManagement();
+	bool initWindow();
+	bool initAudio();
+	bool initScripting();
 
 	//VULKAN INIT
-	bool _init_vulkan();
-	static void _on_window_resized(GLFWwindow* window, int width, int height);
+	bool initVulkan();
+	static void onWindowResized(GLFWwindow* window, int width, int height);
 
-	bool _post_init();
-	bool _main_loop();
-
-
-	GLFWwindow * _window;
-
-	int _window_width;
-	int _window_height;
-
-	std::shared_ptr<ComponentManagement> _component_management;
-
-    //std::shared_ptr<Audio> _audio;
-	std::shared_ptr<Vulkan> _vulkan;
-	std::shared_ptr<ScriptSystem> _script_system;
-
-
+	bool postInit();
+	bool mainLoop();
+	bool cleanUp();
 
 	//diagnostics... probably better to put it in an extra system!
-	void _init_diagnostics();
-	void _update_diagnostics();
-
-	std::chrono::time_point<std::chrono::high_resolution_clock> _frame_start, _frame_end;
-	std::chrono::duration<double> _cum_frame_time_elapsed;
-	int _cum_frame_count;
-	int _current_frame;
-
-
+	void initDiagnostics();
+	void updateDiagnostics();
 
 	//tests
-	void test_scripts();
+	void testScripts();
+
+	GLFWwindow * mWindow;
+
+	int mWindowWidth;
+	int mWindowHeight;
+
+    //std::shared_ptr<Audio> mAudio;
+	std::shared_ptr<Vulkan> mVulkan;
+	std::shared_ptr<ScriptSystem> mScriptSystem;
+	// has to be after the script system for dtor order (script comps destroy within script interpreter)
+	std::shared_ptr<ComponentManagement> mComponentManagement;
+
+	std::chrono::time_point<std::chrono::high_resolution_clock> mFrameStart, mFrameEnd;
+	std::chrono::duration<double> mCumFrameTimeElapsed;
+	int mCumFrameCount;
+	int mCurrentFrame;
+
 };
 
 #endif // ENGINE_H
