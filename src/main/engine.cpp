@@ -4,7 +4,6 @@
 Engine::Engine() :
 	mWindow(0)
 {
-
 }
 
 Engine::~Engine() {

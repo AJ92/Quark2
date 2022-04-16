@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(engine)
+project(quark2)
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -18,13 +18,14 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 file(GLOB_RECURSE sources       src/main/*.cpp src/main/*.h)
 
 file(GLOB_RECURSE sources_test  src/test/*.cpp)
-file(GLOB_RECURSE data          src/resources/*.frag src/resources/*.vert src/resources/*.py src/resources/*.sh src/resources/*.bat)
+file(GLOB_RECURSE data          src/resources/*.py)
+file(GLOB_RECURSE shader        src/resources/*.frag src/resources/*.vert)
 
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${sources})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${sources_test})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${data})
-
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${shader})
 
 ###############################################################################
 ## cmake auto moc fix
@@ -35,7 +36,6 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${data})
 ###############################################################################
 ## target definitions #########################################################
 ###############################################################################
-
 
 add_executable(engine ${sources} ${data})
 
@@ -48,11 +48,30 @@ target_include_directories(engine PUBLIC src/main)
 # this copies all resource files in the build directory
 # we need this, because we want to work with paths relative to the executable
 #file(COPY ${data} DESTINATION resources)
-file(COPY src/resources/ DESTINATION resources FILES_MATCHING PATTERN "*.spv")
+# shaders are generated into target dir.. see further down..
 file(COPY src/resources/ DESTINATION resources FILES_MATCHING PATTERN "*.jpg")
 file(COPY src/resources/ DESTINATION resources FILES_MATCHING PATTERN "*.png")
 file(COPY src/resources/ DESTINATION resources FILES_MATCHING PATTERN "*.obj")
 file(COPY src/resources/ DESTINATION resources FILES_MATCHING PATTERN "*.py")
+
+
+###############################################################################
+## shader target ##############################################################
+###############################################################################
+
+add_custom_target(
+  shader
+  DEPENDS ${shader}
+)
+
+add_custom_command(
+  TARGET shader
+  POST_BUILD
+  COMMAND glslangValidator -V ${shader}
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/resources/shader/test/
+)
+
+add_dependencies(engine shader)
 
 ###############################################################################
 ## dependencies ###############################################################
@@ -109,8 +128,8 @@ endif (WIN32)
 if (UNIX)
   #Python
   #find_package(PythonLibs REQUIRED)
-  set(PYTHON_INCLUDE_DIRS /usr/include/python3.5)
-  set(PYTHON_LIBRARIES /usr/lib/x86_64-linux-gnu/libpython3.5m.so)
+  set(PYTHON_INCLUDE_DIRS /usr/include/python3.8)
+  #set(PYTHON_LIBRARIES /usr/lib/x86_64-linux-gnu/libpython3.8.so)
   include_directories(${PYTHON_INCLUDE_DIRS})
   target_link_libraries(engine PUBLIC ${PYTHON_LIBRARIES})
 
@@ -137,8 +156,10 @@ if (UNIX)
   include_directories(engine PUBLIC thirdparty/tinyobjloader/include)
 
   #bla bla could also search for glfw but now i see what libs are linked...
-  target_link_libraries(engine PUBLIC -lX11 -lXxf86vm -lXrandr -lpthread -lXi -ldl -lXinerama -lXcursor)
-endif (UNIX)
+  target_link_libraries(engine PUBLIC -lX11 -lXxf86vm -lXrandr -lpthread -lXi -ldl -lXinerama -lXcursor -lpython3.8)
+
+ endif (UNIX)
+
 
 #remove the console
 #set_target_properties(engine PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS")

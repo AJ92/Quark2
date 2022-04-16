@@ -46,9 +46,9 @@ bool ScriptSystem::initPython() {
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 	//windows
 	Py_SetProgramName(L"Vulkan0Script");
-#elif
+#else
 	//linux 
-	//Py_SetProgramName("Vulkan0Script");
+	Py_SetProgramName(L"Vulkan0Script");
 #endif	
 	py::dict locals;
 	locals["resource_path"] = py::cast("resources/scripts");
