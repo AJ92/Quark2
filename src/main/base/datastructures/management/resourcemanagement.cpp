@@ -2,9 +2,9 @@
 #include <iostream>
 
 //little helper
-bool hasEnding (std::string const &fullString, std::string const &ending) {
+bool hasEnding (const std::string& fullString, const std::string& ending) {
     if (fullString.length() >= ending.length()) {
-        return (0 == fullString.compare (fullString.length() - ending.length(), ending.length(), ending));
+        return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
     }
 	return false;
 }

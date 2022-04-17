@@ -17,7 +17,6 @@ void ComponentManagement::addComponent(std::shared_ptr<Component> comp) {
 	if (it_map == mTypeCompMap.end()) {
 		//create a new vector
 		mTypeCompMap[comp->getType()] = std::vector<std::shared_ptr<Component> >();
-
 		it_map = mTypeCompMap.find(comp->getType());
 	}
 
