@@ -1,28 +1,15 @@
 #include "igeometry.h"
 #include <iostream>
 
-Geometry::Geometry() :
+IGeometry::IGeometry() :
 	IComponent(Type::Geometry)
 {
 
 }
 
-Geometry::~Geometry()
-{
-
-}
-
-void Geometry::update() {
-	
-}
-
-void Geometry::init() {
-	
-}
-
-std::vector<Vertex> & Geometry::getVertexVector(){
+std::vector<Vertex> & IGeometry::getVertexVector(){
 	return mVertices;
 }
-std::vector<uint32_t> & Geometry::getIndexVector(){
+std::vector<uint32_t> & IGeometry::getIndexVector(){
 	return mIndices;
 }

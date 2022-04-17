@@ -1,19 +1,19 @@
-#ifndef RENDERER_H
-#define RENDERER_H
+#ifndef IRENDERER_H
+#define IRENDERER_H
 
 #include "base/comp/icomponent.h"
 
-class Renderer: public IComponent
+class IRenderer: public IComponent
 {
 public:
-	Renderer();
-	~Renderer();
+	IRenderer();
+	virtual ~IRenderer() = default;
 
-	virtual void init();
-	virtual void update();
+	virtual void init() = 0;
+	virtual void update() = 0;
 
 private:
 
 };
 
-#endif // RENDERER_H
+#endif // IRENDERER_H

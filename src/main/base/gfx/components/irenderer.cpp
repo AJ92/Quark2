@@ -1,21 +1,8 @@
 #include "irenderer.h"
 #include <iostream>
 
-Renderer::Renderer() :
+IRenderer::IRenderer() :
 	IComponent(Type::Renderer)
 {
 
-}
-
-Renderer::~Renderer()
-{
-
-}
-
-void Renderer::update() {
-	
-}
-
-void Renderer::init() {
-	
 }

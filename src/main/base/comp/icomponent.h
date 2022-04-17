@@ -1,6 +1,5 @@
-#ifndef COMPONENT_H
-#define COMPONENT_H
-
+#ifndef ICOMPONENT_H
+#define ICOMPONENT_H
 
 class IComponent
 {
@@ -20,7 +19,7 @@ public:
 	};
 
 	explicit IComponent(Type type);
-	~IComponent() = default;
+	virtual ~IComponent() = default;
 
 	Type getType();
 
@@ -32,4 +31,4 @@ private:
 	Type mType;
 };
 
-#endif // COMPONENT_H
+#endif // ICOMPONENT_H

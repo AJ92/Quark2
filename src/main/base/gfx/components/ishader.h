@@ -1,18 +1,18 @@
-#ifndef SHADER_H
-#define SHADER_H
+#ifndef ISHADER_H
+#define ISHADER_H
 
 #include "base/comp/icomponent.h"
 #include <string>
 
-class Shader: public IComponent
+class IShader: public IComponent
 {
 public:
-	Shader();
-	Shader(std::string & vertexShaderFile, std::string & fragmentShaderFile);
-	~Shader();
+	IShader();
+	IShader(std::string & vertexShaderFile, std::string & fragmentShaderFile);
+	virtual ~IShader() = default;
 
-	virtual void init();
-	virtual void update();
+	virtual void init() = 0;
+	virtual void update() = 0;
 
 private:
 
@@ -20,4 +20,4 @@ private:
 	std::string mFShaderFile;
 };
 
-#endif // SHADER_H
+#endif // ISHADER_H

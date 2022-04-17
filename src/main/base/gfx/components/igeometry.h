@@ -1,18 +1,18 @@
-#ifndef GEOMETRY_H
-#define GEOMETRY_H
+#ifndef IGEOMETRY_H
+#define IGEOMETRY_H
 
 #include "base/comp/icomponent.h"
 #include "base/gfx/vulkan/vulkan.h"
 #include <vector>
 
-class Geometry: public IComponent
+class IGeometry: public IComponent
 {
 public:
-	Geometry();
-	~Geometry();
+	IGeometry();
+	virtual ~IGeometry() = default;
 
-	virtual void init();
-	virtual void update();
+	virtual void init() = 0;
+	virtual void update() = 0;
 
 	std::vector<Vertex> & getVertexVector();
 	std::vector<uint32_t> & getIndexVector();
@@ -22,4 +22,4 @@ private:
 	std::vector<uint32_t> mIndices;
 };
 
-#endif // GEOMETRY_H
+#endif // IGEOMETRY_H

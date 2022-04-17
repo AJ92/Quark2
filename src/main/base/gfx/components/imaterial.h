@@ -1,19 +1,19 @@
-#ifndef MATERIAL_H
-#define MATERIAL_H
+#ifndef IMATERIAL_H
+#define IMATERIAL_H
 
 #include "base/comp/icomponent.h"
 
-class Material: public IComponent
+class IMaterial: public IComponent
 {
 public:
-	Material();
-	~Material();
+	IMaterial();
+	virtual ~IMaterial() = default;
 
-	virtual void init();
-	virtual void update();
+	virtual void init() = 0;
+	virtual void update() = 0;
 
 private:
 
 };
 
-#endif // MATERIAL_H
+#endif // IMATERIAL_H

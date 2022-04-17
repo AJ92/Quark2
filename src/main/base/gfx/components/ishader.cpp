@@ -1,31 +1,18 @@
 #include "ishader.h"
 #include <iostream>
 
-Shader::Shader() :
+IShader::IShader() :
 	IComponent(Type::Shader)
 {
 
 }
 
-Shader::Shader(std::string & vertexShaderFile,
+IShader::IShader(std::string & vertexShaderFile,
 		std::string & fragmentShaderFile) :
 	IComponent(Type::Shader),
 	mVShaderFile(vertexShaderFile),
 	mFShaderFile(fragmentShaderFile)
 {
 
-}
-
-Shader::~Shader()
-{
-
-}
-
-void Shader::update() {
-	
-}
-
-void Shader::init() {
-	
 }
 

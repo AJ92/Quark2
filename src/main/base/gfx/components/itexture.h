@@ -1,21 +1,21 @@
-#ifndef TEXTURE_H
-#define TEXTURE_H
+#ifndef ITEXTURE_H
+#define ITEXTURE_H
 
 #include "base/comp/icomponent.h"
 #include <string>
 
-class Texture: public IComponent
+class ITexture: public IComponent
 {
 public:
-	Texture();
-	Texture(std::string & textureFile);
-	~Texture();
+	ITexture();
+	ITexture(std::string & textureFile);
+	virtual ~ITexture() = default;
 
-	virtual void init();
-	virtual void update();
+	virtual void init() = 0;
+	virtual void update() = 0;
 
 private:
 	std::string mTextureFile;
 };
 
-#endif // TEXTURE_H
+#endif // ITEXTURE_H

@@ -1,28 +1,15 @@
 #include "itexture.h"
 #include <iostream>
 
-Texture::Texture() :
+ITexture::ITexture() :
 	IComponent(Type::Texture)
 {
 
 }
 
-Texture::Texture(std::string & textureFile) :
+ITexture::ITexture(std::string & textureFile) :
 	IComponent(Type::Texture),
 	mTextureFile(textureFile)
 {
 
-}
-
-Texture::~Texture()
-{
-
-}
-
-void Texture::update() {
-	
-}
-
-void Texture::init() {
-	
 }
