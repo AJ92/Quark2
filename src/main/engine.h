@@ -4,7 +4,7 @@
 #define GLFW_INCLUDE_VULKAN
 #include <glfw3.h>
 
-#include "base/vulkan/vulkan.h"
+#include "base/gfx/vulkan/vulkan.h"
 #include "base/systems/scriptsystem.h"
 
 #include <chrono>

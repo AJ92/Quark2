@@ -28,14 +28,14 @@ void ScriptSystem::init() {
 		std::cout << "Python initialization failed" << std::endl;
 	}
 
-	std::vector<std::shared_ptr<Component> > comps = mComponentManagement->getAllComponentsByType(Component::Type::Script);
+	auto& comps = mComponentManagement->getAllComponentsByType(IComponent::Type::Script);
 	for (auto const& comp : comps) {
 		comp->init();
 	}
 }
 
 void ScriptSystem::update() {
-	std::vector<std::shared_ptr<Component> > comps = mComponentManagement->getAllComponentsByType(Component::Type::Script);
+	auto& comps = mComponentManagement->getAllComponentsByType(IComponent::Type::Script);
 	for (auto const& comp : comps) {
 		comp->update();
 	}
@@ -43,13 +43,8 @@ void ScriptSystem::update() {
 
 
 bool ScriptSystem::initPython() {
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-	//windows
 	Py_SetProgramName(L"Vulkan0Script");
-#else
-	//linux 
-	Py_SetProgramName(L"Vulkan0Script");
-#endif	
+	
 	py::dict locals;
 	locals["resource_path"] = py::cast("resources/scripts");
 	py::exec(

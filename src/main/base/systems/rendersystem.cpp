@@ -17,14 +17,14 @@ RenderSystem::~RenderSystem()
 }
 
 void RenderSystem::init() {
-	std::vector<std::shared_ptr<Component> > comps = mComponentManagement->getAllComponentsByType(Component::Type::Renderer);
+	auto& comps = mComponentManagement->getAllComponentsByType(IComponent::Type::Renderer);
 	for (auto const& comp : comps) {
 		comp->init();
 	}
 }
 
 void RenderSystem::update() {
-	std::vector<std::shared_ptr<Component> > comps = mComponentManagement->getAllComponentsByType(Component::Type::Renderer);
+	auto& comps = mComponentManagement->getAllComponentsByType(IComponent::Type::Renderer);
 	for (auto const& comp : comps) {
 		comp->update();
 	}

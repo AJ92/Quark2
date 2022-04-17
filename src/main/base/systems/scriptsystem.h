@@ -2,8 +2,8 @@
 #define SCRIPTSYSTEM_H
 
 #include "base/systems/system.h"
-#include "base/datastructures/components/script.h"
-#include "base/datastructures/management/componentmanagement.h"
+#include "base/comp/scripting/script.h"
+#include "base/comp/management/componentmanagement.h"
 //#include <Python.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/embed.h>

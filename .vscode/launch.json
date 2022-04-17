@@ -2,13 +2,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(gdb) Launch",
+            "name": "run (gdb)",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/bin/engine",
+            "program": "${workspaceRoot}/build/engine",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceRoot}/bin",
+            "cwd": "${workspaceRoot}/build",
             "environment": [],
             "externalConsole": true,
             "MIMode": "gdb",
