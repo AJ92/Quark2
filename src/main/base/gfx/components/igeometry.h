@@ -8,14 +8,14 @@
 class IGeometry: public IComponent
 {
 public:
-	explicit IGeometry(std::string& name);
+	explicit IGeometry(const std::string& name);
 	virtual ~IGeometry() = default;
 
 	virtual void init() = 0;
 	virtual void update() = 0;
 
 private:
-	std::string mName;
+	const std::string mName;
 };
 
 #endif // IGEOMETRY_H

@@ -3,8 +3,8 @@
 
 
 #include "base/gfx/components/igeometryrenderer.h"
-#include "base/gfx/vulkan/material.h"
-#include "base/gfx/vulkan/geometry.h"
+#include "base/gfx/components/imaterial.h"
+#include "base/gfx/components/igeometry.h"
 
 #include <vulkan/vulkan.h>
 #include <glm/glm.hpp>
@@ -18,8 +18,8 @@ namespace vk_backend {
         explicit GeometryRenderer(std::string& name);
         GeometryRenderer(
             const std::string & name, 
-            const IMaterial & material,
-            const IGeometry & geometry
+            const std::shared_ptr<IMaterial> material,
+            const std::shared_ptr<IGeometry> geometry
         );
         virtual ~GeometryRenderer() = default;
 
@@ -27,8 +27,7 @@ namespace vk_backend {
         virtual void update();
 
     private:
-        const IMaterial & mMaterial;
-        const IGeometry & mGeometry;
+
     };
 
 }

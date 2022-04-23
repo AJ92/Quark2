@@ -7,7 +7,7 @@ ITexture::ITexture() :
 
 }
 
-ITexture::ITexture(std::string & textureFile) :
+ITexture::ITexture(const std::string & textureFile) :
 	IComponent(Type::Texture),
 	mTextureFile(textureFile)
 {

@@ -8,7 +8,11 @@ namespace vk_backend {
     class Shader: public IShader
     {
     public:
-        explicit Shader(std::string& name);
+        explicit Shader(
+            const std::string & name, 
+            const std::string & vertexShaderFile, 
+            const std::string & fragmentShaderFile
+        );
         virtual ~Shader() = default;
 
         virtual void init();

@@ -2,9 +2,9 @@
 #include <iostream>
 
 IShader::IShader(
-		std::string& name, 
-		std::string & vertexShaderFile,
-		std::string & fragmentShaderFile) :
+		const std::string & name, 
+		const std::string & vertexShaderFile,
+		const std::string & fragmentShaderFile) :
 	IComponent(Type::Shader)
 	, mName(name)
 	, mVShaderFile(vertexShaderFile)

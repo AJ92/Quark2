@@ -7,14 +7,18 @@
 class IShader: public IComponent
 {
 public:
-	IShader(std::string& name, std::string & vertexShaderFile, std::string & fragmentShaderFile);
+	IShader(
+		const std::string & name, 
+		const std::string & vertexShaderFile, 
+		const std::string & fragmentShaderFile
+	);
 	virtual ~IShader() = default;
 
 	virtual void init() = 0;
 	virtual void update() = 0;
 
 private:
-	std::string mName;
+	const std::string mName;
 	std::string mVShaderFile;
 	std::string mFShaderFile;
 };

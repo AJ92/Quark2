@@ -8,13 +8,11 @@ namespace vk_backend {
     }
 
     GeometryRenderer::GeometryRenderer(
-        std::string& name, 
-        const IMaterial & material,
-        const IGeometry & geometry
+        const std::string & name, 
+        const std::shared_ptr<IMaterial> material,
+        const std::shared_ptr<IGeometry> geometry
     ) :
-        IGeometryRenderer(name),
-        mMaterial(material),
-        mGeometry(geometry)
+        IGeometryRenderer(name, material, geometry)
     {
         
     }

@@ -8,14 +8,14 @@ class ITexture: public IComponent
 {
 public:
 	ITexture();
-	ITexture(std::string & textureFile);
+	ITexture(const std::string & textureFile);
 	virtual ~ITexture() = default;
 
 	virtual void init() = 0;
 	virtual void update() = 0;
 
 private:
-	std::string mTextureFile;
+	const std::string mTextureFile;
 };
 
 #endif // ITEXTURE_H

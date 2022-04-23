@@ -1,7 +1,7 @@
 #include "igeometry.h"
 #include <iostream>
 
-IGeometry::IGeometry(std::string& name) :
+IGeometry::IGeometry(const std::string& name) :
 	IComponent(Type::Geometry)
 	, mName(name)
 {
