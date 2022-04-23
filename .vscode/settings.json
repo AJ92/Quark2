@@ -1,5 +1,7 @@
 {
     "files.associations": {
+        "*.tpl": "html",
+        "*.frag": "c",
         "array": "cpp",
         "bitset": "cpp",
         "string_view": "cpp",
@@ -41,7 +43,29 @@
         "system_error": "cpp",
         "tuple": "cpp",
         "typeindex": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "atomic": "cpp",
+        "bit": "cpp",
+        "codecvt": "cpp",
+        "condition_variable": "cpp",
+        "deque": "cpp",
+        "forward_list": "cpp",
+        "list": "cpp",
+        "map": "cpp",
+        "set": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp",
+        "vector": "cpp",
+        "algorithm": "cpp",
+        "iterator": "cpp",
+        "memory_resource": "cpp",
+        "numeric": "cpp",
+        "random": "cpp",
+        "string": "cpp",
+        "mutex": "cpp",
+        "thread": "cpp",
+        "cinttypes": "cpp",
+        "variant": "cpp"
     },
     "python.linting.pylintEnabled": false,
     "C_Cpp.errorSquiggles": "Disabled"

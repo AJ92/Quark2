@@ -1,13 +1,13 @@
 #ifndef RENDERSYSTEM_H
 #define RENDERSYSTEM_H
 
-#include "base/systems/system.h"
+#include "base/systems/isystem.h"
 #include "base/comp/management/componentmanagement.h"
 #include <memory>
 #include <map>
 
 
-class RenderSystem: public System
+class RenderSystem: public ISystem
 {
 public:
 	RenderSystem();

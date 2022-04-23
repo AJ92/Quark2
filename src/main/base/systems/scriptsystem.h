@@ -1,7 +1,7 @@
 #ifndef SCRIPTSYSTEM_H
 #define SCRIPTSYSTEM_H
 
-#include "base/systems/system.h"
+#include "base/systems/isystem.h"
 #include "base/comp/scripting/script.h"
 #include "base/comp/management/componentmanagement.h"
 //#include <Python.h>
@@ -13,7 +13,7 @@
 
 namespace py = pybind11;
 
-class ScriptSystem: public System
+class ScriptSystem: public ISystem
 {
 public:
 	ScriptSystem();

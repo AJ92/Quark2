@@ -13,8 +13,8 @@ public:
 		Material,
 		Shader,
 		Texture,
+		GeometryRenderer,
 		Script,
-
 		None
 	};
 

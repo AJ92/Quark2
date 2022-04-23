@@ -1,15 +1,9 @@
 #include "igeometry.h"
 #include <iostream>
 
-IGeometry::IGeometry() :
+IGeometry::IGeometry(std::string& name) :
 	IComponent(Type::Geometry)
+	, mName(name)
 {
 
-}
-
-std::vector<Vertex> & IGeometry::getVertexVector(){
-	return mVertices;
-}
-std::vector<uint32_t> & IGeometry::getIndexVector(){
-	return mIndices;
 }

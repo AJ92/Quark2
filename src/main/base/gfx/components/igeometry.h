@@ -2,24 +2,20 @@
 #define IGEOMETRY_H
 
 #include "base/comp/icomponent.h"
-#include "base/gfx/vulkan/vulkan.h"
 #include <vector>
+#include <string>
 
 class IGeometry: public IComponent
 {
 public:
-	IGeometry();
+	explicit IGeometry(std::string& name);
 	virtual ~IGeometry() = default;
 
 	virtual void init() = 0;
 	virtual void update() = 0;
 
-	std::vector<Vertex> & getVertexVector();
-	std::vector<uint32_t> & getIndexVector();
-
 private:
-	std::vector<Vertex> mVertices;
-	std::vector<uint32_t> mIndices;
+	std::string mName;
 };
 
 #endif // IGEOMETRY_H
