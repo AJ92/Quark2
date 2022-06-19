@@ -5,7 +5,9 @@
 
 
 
-EntityManagement::EntityManagement() {
+EntityManagement::EntityManagement(const std::shared_ptr<ComponentManagement> cm) :
+	mComponentManagement(cm)
+{
 
 }
 
@@ -77,7 +79,7 @@ std::vector<std::shared_ptr<IComponent> > EntityManagement::getAllComponentsFrom
 std::vector<std::shared_ptr<IComponent> > EntityManagement::getAllComponentsByType(
 	IComponent::Type type)
 {
-	return mComponentManagement.getAllComponentsByType(type);
+	return mComponentManagement->getAllComponentsByType(type);
 }
 
 bool EntityManagement::addComponentToEntity(
@@ -101,7 +103,6 @@ bool EntityManagement::removeComponentFromEntity(
 	if (it_map == mIdentifierComponentListMap.end()) {
         return false;
 	}
-
 
 	auto it_vec = std::find(it_map->second.begin(), it_map->second.end(), comp);
 

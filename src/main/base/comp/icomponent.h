@@ -6,6 +6,7 @@ class IComponent
 public:
 
 	enum class Type {
+		None,
 		GameObject,
 		Transformation,
 		Renderer,
@@ -14,8 +15,7 @@ public:
 		Shader,
 		Texture,
 		GeometryRenderer,
-		Script,
-		None
+		Script
 	};
 
 	explicit IComponent(Type type);
@@ -28,7 +28,7 @@ public:
 	virtual void update() = 0;
 
 private:
-	Type mType;
+	Type mType = Type::None;
 };
 
 #endif // ICOMPONENT_H

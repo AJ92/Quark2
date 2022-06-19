@@ -1,13 +1,7 @@
 #include "base/systems/scriptsystem.h"
 #include <iostream>
 
-
-ScriptSystem::ScriptSystem()
-{
-	init();
-}
-
-ScriptSystem::ScriptSystem(std::shared_ptr<ComponentManagement> cm) :
+ScriptSystem::ScriptSystem(const std::shared_ptr<ComponentManagement> cm) :
 	mComponentManagement(cm)
 {
 	init();

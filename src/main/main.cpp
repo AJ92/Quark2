@@ -44,7 +44,7 @@ int main(void)
   std::streambuf *coutbuf = std::cout.rdbuf(); //save old buf
   //std::cout.rdbuf(out.rdbuf()); //redirect std::cout to out.txt!
 
-  Engine e;
+  quark::Engine e;
 
   bool success = true;
 

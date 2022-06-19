@@ -9,63 +9,69 @@
 
 #include "base/gfx/vulkan/vulkan.h"
 #include "base/systems/scriptsystem.h"
+#include "base/comp/management/entitymanagement.h"
 
 #include <chrono>
 #include <memory>
 //#include <audio.h>
 
 
-class Engine
-{
-public:
-	Engine();
-	~Engine();
+namespace quark{
 
-	void run();
+	// has to be destroyed before script system for dtor order (script comps destroy within script interpreter)
+	static std::shared_ptr<ComponentManagement> mComponentManagement;
+	static std::shared_ptr<EntityManagement> mEntityManagement;
 
-	std::shared_ptr<Vulkan> getVulkanRenderer();
+	class Engine
+	{
+	public:
+		Engine();
+		~Engine();
 
-private:
-	bool isDebug;
+		void run();
 
-	bool preInit();
-	bool initAllcoators();
-	bool initComponentManagement();
-	bool initWindow();
-	bool initAudio();
-	bool initScripting();
+		std::shared_ptr<Vulkan> getVulkanRenderer();
 
-	//VULKAN INIT
-	bool initVulkan();
-	static void onWindowResized(GLFWwindow* window, int width, int height);
+	private:
+		bool isDebug;
 
-	bool postInit();
-	bool mainLoop();
-	bool cleanUp();
+		bool preInit();
+		bool initAllcoators();
+		bool initComponentManagement();
+		bool initWindow();
+		bool initAudio();
+		bool initScripting();
 
-	//diagnostics... probably better to put it in an extra system!
-	void initDiagnostics();
-	void updateDiagnostics();
+		//VULKAN INIT
+		bool initVulkan();
+		static void onWindowResized(GLFWwindow* window, int width, int height);
 
-	//tests
-	void testScripts();
+		bool postInit();
+		bool mainLoop();
+		bool cleanUp();
 
-	GLFWwindow * mWindow;
+		//diagnostics... probably better to put it in an extra system!
+		void initDiagnostics();
+		void updateDiagnostics();
 
-	int mWindowWidth;
-	int mWindowHeight;
+		//tests
+		void testScripts();
 
-    //std::shared_ptr<Audio> mAudio;
-	std::shared_ptr<Vulkan> mVulkan;
-	std::shared_ptr<ScriptSystem> mScriptSystem;
-	// has to be after the script system for dtor order (script comps destroy within script interpreter)
-	std::shared_ptr<ComponentManagement> mComponentManagement;
+		GLFWwindow * mWindow;
 
-	std::chrono::time_point<std::chrono::high_resolution_clock> mFrameStart, mFrameEnd;
-	std::chrono::duration<double> mCumFrameTimeElapsed;
-	int mCumFrameCount;
-	int mCurrentFrame;
+		int mWindowWidth;
+		int mWindowHeight;
 
+		std::chrono::time_point<std::chrono::high_resolution_clock> mFrameStart, mFrameEnd;
+		std::chrono::duration<double> mCumFrameTimeElapsed;
+		uint64_t mCumFrameCount = 0;
+		uint64_t mCurrentFrame = 0;
+
+		//std::shared_ptr<Audio> mAudio;
+		std::shared_ptr<Vulkan> mVulkan;
+		std::shared_ptr<ScriptSystem> mScriptSystem;
+
+	};
 };
 
 #endif // ENGINE_H

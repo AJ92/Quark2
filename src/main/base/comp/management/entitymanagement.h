@@ -11,7 +11,8 @@
 class EntityManagement
 {
 public:
-	EntityManagement();
+	EntityManagement() = delete;
+	EntityManagement(const std::shared_ptr<ComponentManagement> cm);
 	~EntityManagement();
 
 	std::shared_ptr<Entity> createEntity(std::string identifier);
@@ -38,7 +39,7 @@ private:
 	std::map<std::string, std::shared_ptr<Entity> > mIdentifierEntityMap;
 	std::map<std::string, std::vector<std::shared_ptr<IComponent> > > mIdentifierComponentListMap;
 
-	ComponentManagement mComponentManagement;
+	std::shared_ptr<ComponentManagement> mComponentManagement;
 };
 
 #endif // ENTITYMANAGEMENT_H

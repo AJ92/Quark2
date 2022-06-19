@@ -16,8 +16,8 @@ namespace py = pybind11;
 class ScriptSystem: public ISystem
 {
 public:
-	ScriptSystem();
-	ScriptSystem(std::shared_ptr<ComponentManagement> cm);
+	ScriptSystem() = delete;
+	ScriptSystem(const std::shared_ptr<ComponentManagement> cm);
 	~ScriptSystem();
 
 	//initialize all script objects
